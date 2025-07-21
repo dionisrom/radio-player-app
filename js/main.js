@@ -829,15 +829,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Progress bar logic
     audio.addEventListener('timeupdate', () => {
-        if (audio.duration) {
-            progressBar.value = Math.round((audio.currentTime / audio.duration) * 100);
-            currentTimeEl.textContent = formatTime(audio.currentTime);
-            durationEl.textContent = formatTime(audio.duration);
-        } else {
-            progressBar.value = 0;
-            currentTimeEl.textContent = '0:00';
-            durationEl.textContent = '0:00';
-        }
+        // if (audio.duration) {
+        //     progressBar.value = Math.round((audio.currentTime / audio.duration) * 100);
+        //     currentTimeEl.textContent = formatTime(audio.currentTime);
+        //     //durationEl.textContent = formatTime(audio.duration);
+        // } else {
+        //     progressBar.value = 0;
+        //     currentTimeEl.textContent = '0:00';
+        //     durationEl.textContent = '0:00';
+        // }
     });
     progressBar.addEventListener('input', (e) => {
         if (audio.duration) {
