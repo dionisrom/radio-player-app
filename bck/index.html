@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Radio Player</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="32x32" href="/favicon-32x32.png">
+    
+    <!-- FIX: Load Tailwind library BEFORE the configuration script -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Library for parsing stream metadata -->
+    <script src="https://cdn.jsdelivr.net/npm/icecast-metadata-player@2.0.0/dist/icecast-metadata-player.main.js"></script>
+    <!-- Library for Drag and Drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b; /* dark:bg-slate-800 */
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        .station-item.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+        }
+        .dark .station-item.active {
+             background-color: #6366f1; /* indigo-500 */
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .status-online {
+            background-color: #22c55e; /* green-500 */
+        }
+        .status-offline {
+            background-color: #ef4444; /* red-500 */
+        }
+        .status-checking {
+            background-color: #eab308; /* yellow-500 */
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        #visualizer-container {
+            height: 128px; /* 8rem */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        #now-playing-title {
+            height: 2.5rem;
+            line-height: 1.25rem;
+        }
+        .favorite-star {
+            color: #cbd5e1; /* slate-300 */
+            transition: color 0.2s ease-in-out;
+        }
+        .favorite-star.favorited, .favorite-star:hover {
+            color: #facc15; /* yellow-400 */
+        }
+        .drag-handle {
+            cursor: grab;
+            margin-right: 10px;
+            color: #94a3b8; /* slate-400 */
+        }
+        .sortable-ghost {
+            opacity: 0.4;
+            background: #e0e7ff; /* indigo-100 */
+        }
+    </style>
+    <script>
+        // Set theme on initial load
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex items-center justify-center min-h-screen p-4 transition-colors duration-300">
+
+    <div class="w-full max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row transition-colors duration-300" style="height: 600px;">
+
+        <!-- Station List -->
+        <aside class="w-full md:w-1/3 bg-slate-50 dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-colors duration-300">
+            <header class="p-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <h2 class="text-xl font-bold text-slate-700 dark:text-slate-200">Hi-Fi Radio</h2>
+                <div>
+                    <button id="viz-toggle" title="Toggle Visualizer" class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mr-4">
+                        <i class="fas fa-chart-bar"></i>
+                        <i class="fas fa-wave-square hidden"></i>
+                    </button>
+                    <button id="theme-toggle" title="Toggle Theme" class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mr-4">
+                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon hidden"></i>
+                    </button>
+                    <button id="refresh-status" title="Refresh Statuses" class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </header>
+            <div class="p-2 border-b border-slate-200 dark:border-slate-700">
+                <input type="search" id="search-input" placeholder="Search stations..." class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <nav id="station-list" class="flex-1 overflow-y-auto custom-scrollbar">
+                <!-- Stations will be populated by JavaScript -->
+            </nav>
+        </aside>
+
+        <!-- Player Section -->
+        <main class="w-full md:w-2/3 p-6 sm:p-8 flex flex-col bg-slate-100 dark:bg-slate-800/50 transition-colors duration-300">
+            <div id="player-content" class="text-center flex-1 flex flex-col items-center justify-center transition-opacity duration-500">
+                <div id="visualizer-container">
+                    <!-- The icon or the visualizer will be placed here by JS -->
+                </div>
+                <h1 id="info-name" class="text-3xl font-bold text-slate-800 dark:text-white">Select a Station</h1>
+                <div id="now-playing-title" class="text-slate-600 dark:text-slate-300 mt-2 text-lg font-medium">
+                    <p id="info-genre">Your music awaits</p>
+                </div>
+                <p id="info-quality" class="text-sm text-slate-400 dark:text-slate-500 mt-4"></p>
+            </div>
+            <div class="mt-auto">
+                <audio id="audio-player" controls crossOrigin="anonymous" class="w-full">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let stations = [
+                { name: 'Cavo Paradiso', url: 'https://live.cavoparadiso.gr/stream', genre: 'Deep & Progressive House', quality: 'MP3 192kbps' },
+                { name: 'Ibiza Global Radio', url: 'https://listenssl.ibizaglobalradio.com/live', genre: 'House, Tech House', quality: 'MP3 320kbps' },
+                { name: 'Intense Radio', url: 'https://intenseradio.net/128.mp3', genre: 'Dance, Trance, Techno', quality: 'MP3 128kbps' },
+                { name: 'Proton Radio', url: 'https://shoutcast.protonradio.com/;', genre: 'Progressive House', quality: 'MP3 320kbps' },
+                { name: 'DI.FM - Vocal Trance', url: 'https://listen.di.fm/vocaltrance', genre: 'Vocal Trance', quality: 'MP3 320kbps' },
+                { name: 'DI.FM - EDM Hits', url: 'https://listen.di.fm/edm', genre: 'EDM, Dance, Progressive', quality: 'MP3 320kbps' },
+                { name: 'The Jazz Groove', url: 'https://stream.thejazzgroove.com/stream', genre: 'Laid-back Jazz', quality: 'AAC 128kbps' },
+                { name: 'Jazz24', url: 'https://d.live.knkx.org/knkx-256k-aac', genre: 'Classic & Modern Jazz', quality: 'AAC 256kbps' },
+                { name: 'Naim Jazz', url: 'https://mscp3.live-streams.nl:8360/mp3.mp3', genre: 'Contemporary & Classic Jazz', quality: 'MP3 320kbps' },
+                { name: 'Absolute Radio 70s', url: 'https://listen.absoluteradio.co.uk/absolute70s.mp3', genre: '70s Rock & Pop', quality: 'MP3 128kbps' },
+                { name: 'Absolute Radio 80s', url: 'https://listen.absoluteradio.co.uk/absolute80s.mp3', genre: '80s Pop & Rock', quality: 'MP3 128kbps' },
+                { name: 'Dance Wave Retro!', url: 'https://dancewaveretro.com/dancewaveretro.flac', genre: '80s & 90s Dance', quality: 'FLAC (Lossless)' },
+                { name: 'PulsRadio 2000', url: 'http://listen.pulsradio.com/2000.mp3', genre: '00s Dance & Pop', quality: 'MP3 192kbps' },
+                { name: 'PulsRadio 2010', url: 'http://listen.pulsradio.com/2010.mp3', genre: '10s Dance & Pop', quality: 'MP3 192kbps' },
+                { name: 'Radio Paradise (Main)', url: 'https://stream.radioparadise.com/flac', genre: 'Eclectic Rock, Pop, Jazz', quality: 'FLAC (Lossless)' }
+            ];
+
+            // --- PAGE ELEMENT REFERENCES ---
+            const stationList = document.getElementById('station-list');
+            const audioPlayer = document.getElementById('audio-player');
+            const infoName = document.getElementById('info-name');
+            const infoGenre = document.getElementById('info-genre');
+            const infoQuality = document.getElementById('info-quality');
+            const visualizerContainer = document.getElementById('visualizer-container');
+            const refreshButton = document.getElementById('refresh-status');
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const vizToggleButton = document.getElementById('viz-toggle');
+            const searchInput = document.getElementById('search-input');
+
+            // --- PLAYER STATE ---
+            let audioContext, analyser, sourceNode;
+            let visualizerInitialized = false;
+            let metadataPlayer;
+            let currentViz = 'bars';
+
+            // --- FAVORITES & SORTING ---
+            let favorites = [];
+
+            function loadStoredData() {
+                const storedFavorites = localStorage.getItem('radioFavorites');
+                favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+                stations.forEach(station => {
+                    station.isFavorite = favorites.includes(station.name);
+                });
+
+                const storedOrder = localStorage.getItem('radioSortOrder');
+                if (storedOrder) {
+                    const orderedNames = JSON.parse(storedOrder);
+                    const stationMap = new Map(stations.map(s => [s.name, s]));
+                    const orderedStations = orderedNames.map(name => stationMap.get(name)).filter(Boolean);
+                    const newStations = stations.filter(s => !orderedNames.includes(s.name));
+                    stations = [...orderedStations, ...newStations];
+                }
+
+                currentViz = localStorage.getItem('radioViz') || 'bars';
+            }
+
+            function saveFavorites() {
+                localStorage.setItem('radioFavorites', JSON.stringify(favorites));
+            }
+            
+            function saveOrder() {
+                const orderedNames = stations.map(s => s.name);
+                localStorage.setItem('radioSortOrder', JSON.stringify(orderedNames));
+            }
+
+            function toggleFavorite(stationName) {
+                const favIndex = favorites.indexOf(stationName);
+                if (favIndex > -1) {
+                    favorites.splice(favIndex, 1);
+                } else {
+                    favorites.push(stationName);
+                }
+                saveFavorites();
+                loadStoredData();
+                populateStationList(searchInput.value);
+            }
+            
+            // --- VISUALIZER SETUP ---
+            function initVisualizer() {
+                if (visualizerInitialized) return;
+
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    sourceNode = audioContext.createMediaElementSource(audioPlayer);
+                    
+                    sourceNode.connect(analyser);
+                    analyser.connect(audioContext.destination);
+                    
+                    startDrawing();
+                    visualizerInitialized = true;
+                } catch (e) {
+                    console.error("Visualizer initialization failed:", e);
+                    visualizerContainer.innerHTML = `<div class="flex items-center justify-center h-full"><p class="text-sm text-slate-400 dark:text-slate-500">Visualizer not available.</p></div>`;
+                }
+            }
+
+            function startDrawing() {
+                visualizerContainer.innerHTML = '<canvas id="visualizer" class="w-full h-full"></canvas>';
+                const canvas = document.getElementById('visualizer');
+                const canvasCtx = canvas.getContext('2d');
+                
+                function draw() {
+                    requestAnimationFrame(draw);
+                    if (audioPlayer.paused) {
+                        if (canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) {
+                            canvas.width = canvas.offsetWidth;
+                            canvas.height = canvas.offsetHeight;
+                        }
+                        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+                        return;
+                    }
+
+                    if (currentViz === 'bars') {
+                        drawFrequencyBars(canvas, canvasCtx);
+                    } else {
+                        drawWaveform(canvas, canvasCtx);
+                    }
+                }
+                draw();
+            }
+
+            function drawFrequencyBars(canvas, canvasCtx) {
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                analyser.getByteFrequencyData(dataArray);
+                
+                if(canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) {
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+                }
+                canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const isDarkMode = document.documentElement.classList.contains('dark');
+                const barWidth = (canvas.width / bufferLength) * 1.5;
+                let barHeight;
+                let x = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i] / 2;
+                    const color = isDarkMode ? `rgba(99, 102, 241, ${barHeight / 150})` : `rgba(79, 70, 229, ${barHeight / 150})`;
+                    canvasCtx.fillStyle = color;
+                    canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                    x += barWidth + 2;
+                }
+            }
+
+            function drawWaveform(canvas, canvasCtx) {
+                analyser.fftSize = 2048;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                analyser.getByteTimeDomainData(dataArray);
+
+                if(canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) {
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+                }
+                canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const isDarkMode = document.documentElement.classList.contains('dark');
+                canvasCtx.lineWidth = 2;
+                canvasCtx.strokeStyle = isDarkMode ? '#6366f1' : '#4f46e5';
+                canvasCtx.beginPath();
+                const sliceWidth = canvas.width * 1.0 / bufferLength;
+                let x = 0;
+                for(let i = 0; i < bufferLength; i++) {
+                    const v = dataArray[i] / 128.0;
+                    const y = v * canvas.height / 2;
+                    if(i === 0) {
+                        canvasCtx.moveTo(x, y);
+                    } else {
+                        canvasCtx.lineTo(x, y);
+                    }
+                    x += sliceWidth;
+                }
+                canvasCtx.lineTo(canvas.width, canvas.height / 2);
+                canvasCtx.stroke();
+            }
+            
+            function showInitialIcon() {
+                 visualizerContainer.innerHTML = `
+                    <div class="w-32 h-32 bg-gray-200 dark:bg-slate-700 rounded-full flex items-center justify-center transition-colors duration-300">
+                        <i class="fas fa-radio text-6xl text-gray-400 dark:text-slate-400"></i>
+                    </div>`;
+            }
+
+            function setupMetadata(station) {
+                if (metadataPlayer) {
+                    metadataPlayer.disconnect();
+                }
+                infoGenre.textContent = station.genre;
+                
+                if (typeof IcecastMetadataPlayer === 'undefined') {
+                    //console.error("IcecastMetadataPlayer library not loaded.");
+                    return;
+                }
+
+                const Player = IcecastMetadataPlayer.default;
+
+                metadataPlayer = new Player(station.url, {
+                    onMetadata: (metadata) => {
+                        infoGenre.textContent = metadata.StreamTitle ? metadata.StreamTitle : station.genre;
+                    },
+                    audioElement: audioPlayer,
+                });
+            }
+
+            // --- HEALTH CHECK FUNCTION ---
+            async function checkStreamHealth(url) {
+				return true; // remove this line to actually do the health check
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 3000);
+                    await fetch(url, { mode: 'no-cors', signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    return true;
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            // --- UI POPULATION AND UPDATES ---
+            function populateStationList(filter = '') {
+                const searchTerm = filter.toLowerCase();
+                
+                stations.sort((a, b) => {
+                    if (a.isFavorite && !b.isFavorite) return -1;
+                    if (!a.isFavorite && b.isFavorite) return 1;
+                    return 0;
+                });
+
+                stationList.innerHTML = '';
+                stations
+                    .filter(station => station.name.toLowerCase().includes(searchTerm) || station.genre.toLowerCase().includes(searchTerm))
+                    .forEach((station, index) => {
+                        const stationDiv = document.createElement('div');
+                        stationDiv.className = 'station-item w-full text-left p-4 border-b border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200 flex items-center justify-between';
+                        stationDiv.dataset.stationName = station.name;
+                        
+                        const leftContainer = document.createElement('div');
+                        leftContainer.className = 'flex items-center flex-grow min-w-0';
+                        
+                        const clickArea = document.createElement('div');
+                        clickArea.className = 'flex items-center cursor-pointer flex-grow min-w-0';
+
+                        const dragHandle = document.createElement('span');
+                        dragHandle.className = 'drag-handle';
+                        dragHandle.innerHTML = '<i class="fas fa-grip-vertical"></i>';
+
+                        const statusDot = document.createElement('span');
+                        statusDot.className = 'status-dot';
+                        statusDot.id = `status-${station.name.replace(/\s/g, '')}`;
+                        statusDot.classList.add(station.isOnline === undefined ? 'status-checking' : (station.isOnline ? 'status-online' : 'status-offline'));
+
+                        const textContainer = document.createElement('div');
+                        textContainer.className = "min-w-0";
+                        const name = document.createElement('span');
+                        name.className = 'font-semibold block truncate';
+                        name.textContent = station.name;
+                        const genre = document.createElement('span');
+                        genre.className = 'block text-sm text-slate-500 dark:text-slate-400 truncate';
+                        genre.textContent = station.genre;
+                        textContainer.appendChild(name);
+                        textContainer.appendChild(genre);
+
+                        clickArea.appendChild(dragHandle);
+                        clickArea.appendChild(statusDot);
+                        clickArea.appendChild(textContainer);
+                        
+                        leftContainer.appendChild(clickArea);
+
+                        const favoriteButton = document.createElement('button');
+                        favoriteButton.className = 'favorite-btn p-2 ml-2 flex-shrink-0';
+                        favoriteButton.title = 'Toggle Favorite';
+                        favoriteButton.innerHTML = `<i class="fa-star ${station.isFavorite ? 'fas favorited' : 'far'} favorite-star"></i>`;
+                        favoriteButton.dataset.stationName = station.name;
+
+                        stationDiv.appendChild(leftContainer);
+                        stationDiv.appendChild(favoriteButton);
+                        stationList.appendChild(stationDiv);
+                    });
+            }
+            
+            function initSortable() {
+                new Sortable(stationList, {
+                    animation: 150,
+                    handle: '.drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    onEnd: function (evt) {
+                        const movedItem = stations.splice(evt.oldIndex, 1)[0];
+                        stations.splice(evt.newIndex, 0, movedItem);
+                        saveOrder();
+                        populateStationList(searchInput.value);
+                    },
+                });
+            }
+
+            async function updateAllStatuses() {
+                refreshButton.querySelector('i').classList.add('fa-spin');
+                
+                for (const station of stations) {
+                    const isOnline = await checkStreamHealth(station.url);
+                    station.isOnline = isOnline;
+                    const statusDot = document.getElementById(`status-${station.name.replace(/\s/g, '')}`);
+                    if (statusDot) {
+                        statusDot.classList.remove('status-checking');
+                        statusDot.classList.add(isOnline ? 'status-online' : 'status-offline');
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+
+                refreshButton.querySelector('i').classList.remove('fa-spin');
+            }
+            
+            // --- EVENT LISTENERS ---
+            stationList.addEventListener('click', (event) => {
+                const favoriteBtn = event.target.closest('.favorite-btn');
+                if (favoriteBtn) {
+                    event.stopPropagation();
+                    toggleFavorite(favoriteBtn.dataset.stationName);
+                    return;
+                }
+
+                const stationItem = event.target.closest('.station-item');
+                if (stationItem) {
+                    const stationName = stationItem.dataset.stationName;
+                    const selectedStation = stations.find(s => s.name === stationName);
+
+                    if (!selectedStation) return;
+
+                    document.querySelectorAll('.station-item.active').forEach(item => item.classList.remove('active'));
+                    stationItem.classList.add('active');
+
+                    if (selectedStation.isOnline === false) {
+                        infoName.textContent = selectedStation.name;
+                        infoGenre.textContent = "This station is currently offline.";
+                        infoQuality.textContent = "";
+                        audioPlayer.pause();
+                        audioPlayer.src = '';
+                        showInitialIcon();
+                        return;
+                    }
+
+                    infoName.textContent = selectedStation.name;
+                    infoQuality.textContent = `Quality: ${selectedStation.quality}`;
+                    audioPlayer.src = selectedStation.url;
+                    audioPlayer.play().catch(e => {
+                        console.error("Playback failed:", e);
+                        infoGenre.textContent = "Error: Stream could not be loaded.";
+                        showInitialIcon();
+                    });
+                    
+                    setupMetadata(selectedStation);
+                }
+            });
+            
+            audioPlayer.addEventListener('play', () => {
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                initVisualizer();
+            });
+
+            refreshButton.addEventListener('click', () => {
+                updateAllStatuses();
+            });
+
+            themeToggleButton.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.theme = isDark ? 'dark' : 'light';
+                updateThemeIcons();
+            });
+
+            vizToggleButton.addEventListener('click', () => {
+                currentViz = currentViz === 'bars' ? 'wave' : 'bars';
+                localStorage.setItem('radioViz', currentViz);
+                updateVizIcons();
+            });
+
+            searchInput.addEventListener('input', (e) => {
+                populateStationList(e.target.value);
+            });
+            
+            function updateThemeIcons() {
+                const isDark = document.documentElement.classList.contains('dark');
+                themeToggleButton.querySelector('.fa-sun').classList.toggle('hidden', isDark);
+                themeToggleButton.querySelector('.fa-moon').classList.toggle('hidden', !isDark);
+            }
+
+            function updateVizIcons() {
+                const isBars = currentViz === 'bars';
+                vizToggleButton.querySelector('.fa-chart-bar').classList.toggle('hidden', !isBars);
+                vizToggleButton.querySelector('.fa-wave-square').classList.toggle('hidden', isBars);
+            }
+
+            // --- INITIALIZATION ---
+            showInitialIcon();
+            loadStoredData();
+            populateStationList();
+            updateAllStatuses();
+            updateThemeIcons();
+            updateVizIcons();
+            initSortable();
+        });
+    </script>
+
+</body>
+</html>

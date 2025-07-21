@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Favicon Generator</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f7fafc;
+        }
+        .preview { 
+            display: flex; 
+            gap: 20px; 
+            align-items: center; 
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .size-demo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        canvas {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+        }
+        button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #3182ce;
+        }
+        .download-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Radio App Favicon Generator</h1>
+    
+    <div class="preview">
+        <div class="size-demo">
+            <span>16x16:</span>
+            <canvas id="canvas16" width="16" height="16"></canvas>
+        </div>
+        <div class="size-demo">
+            <span>32x32:</span>
+            <canvas id="canvas32" width="32" height="32"></canvas>
+        </div>
+        <div class="size-demo">
+            <span>48x48:</span>
+            <canvas id="canvas48" width="48" height="48"></canvas>
+        </div>
+    </div>
+
+    <div class="download-section">
+        <h3>Download Favicons</h3>
+        <button onclick="downloadFavicon(16)">Download 16x16 PNG</button>
+        <button onclick="downloadFavicon(32)">Download 32x32 PNG</button>
+        <button onclick="downloadFavicon(48)">Download 48x48 PNG</button>
+        <br>
+        <p><em>Right-click on the canvas above to save as ICO file, or use the PNG downloads.</em></p>
+    </div>
+
+    <script>
+        const svgData = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+          <rect x="4" y="12" width="24" height="16" rx="2" ry="2" fill="#2d3748" stroke="#4a5568" stroke-width="1"/>
+          <circle cx="10" cy="20" r="3" fill="#1a202c" stroke="#4a5568" stroke-width="0.5"/>
+          <circle cx="10" cy="20" r="1.5" fill="#4a5568"/>
+          <circle cx="20" cy="17" r="2" fill="#4a5568" stroke="#718096" stroke-width="0.5"/>
+          <circle cx="26" cy="17" r="2" fill="#4a5568" stroke="#718096" stroke-width="0.5"/>
+          <circle cx="20" cy="23" r="2" fill="#4a5568" stroke="#718096" stroke-width="0.5"/>
+          <circle cx="26" cy="23" r="2" fill="#4a5568" stroke="#718096" stroke-width="0.5"/>
+          <line x1="20" y1="15.5" x2="20" y2="16.5" stroke="#e2e8f0" stroke-width="0.5"/>
+          <line x1="26" y1="15.5" x2="26" y2="16.5" stroke="#e2e8f0" stroke-width="0.5"/>
+          <line x1="20" y1="21.5" x2="20" y2="22.5" stroke="#e2e8f0" stroke-width="0.5"/>
+          <line x1="26" y1="21.5" x2="26" y2="22.5" stroke="#e2e8f0" stroke-width="0.5"/>
+          <line x1="8" y1="12" x2="6" y2="4" stroke="#718096" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="24" y1="12" x2="26" y2="4" stroke="#718096" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 6 8 Q 8 6 10 8" fill="none" stroke="#48bb78" stroke-width="1" opacity="0.8"/>
+          <path d="M 22 8 Q 24 6 26 8" fill="none" stroke="#48bb78" stroke-width="1" opacity="0.8"/>
+          <path d="M 5 10 Q 8 7 11 10" fill="none" stroke="#48bb78" stroke-width="0.8" opacity="0.6"/>
+          <path d="M 21 10 Q 24 7 27 10" fill="none" stroke="#48bb78" stroke-width="0.8" opacity="0.6"/>
+        </svg>`;
+
+        function renderFavicon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            
+            const img = new Image();
+            const blob = new Blob([svgData], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            
+            img.onload = function() {
+                ctx.clearRect(0, 0, size, size);
+                ctx.drawImage(img, 0, 0, size, size);
+                URL.revokeObjectURL(url);
+            };
+            
+            img.src = url;
+        }
+
+        function downloadFavicon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const link = document.createElement('a');
+            link.download = `favicon-${size}x${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Render all sizes
+        renderFavicon(16);
+        renderFavicon(32);
+        renderFavicon(48);
+    </script>
+</body>
+</html>
