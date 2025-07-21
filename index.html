@@ -90,11 +90,6 @@
                     <!-- The icon or the visualizer will be placed here by JS -->
                 </div>
                 <div id="visualizer-description" class="sr-only">Visual audio spectrum analyzer showing the frequency and amplitude of the currently playing audio. The visualization changes in real-time with the music.</div>
-                
-                <h3 id="info-name" class="text-3xl font-bold text-slate-800 dark:text-white" aria-live="polite">Select a Station</h3>
-                <div id="now-playing-title" class="text-slate-600 dark:text-slate-300 mt-2 text-lg font-medium" role="status" aria-live="polite" aria-label="Currently playing">
-                    <p id="info-genre">Your music awaits</p>
-                </div>
                 <p id="info-quality" class="text-sm text-slate-500 dark:text-slate-400 mt-4" aria-live="polite" aria-label="Stream quality information"></p>
                 <div id="player-status" class="sr-only" role="status" aria-live="assertive" aria-atomic="true">
                     <!-- Status messages for screen readers -->
@@ -106,13 +101,41 @@
                     <!-- Performance stats will be populated by JavaScript -->
                 </div>
             </div>
+            <!-- Custom Glassmorphism Audio Player UI -->
+            <div id="custom-audio-player" class="glass-player-container w-full max-w-xl mx-auto mt-8 mb-4 p-6 rounded-2xl shadow-xl backdrop-blur-2xl bg-white/30 dark:bg-slate-800/40 border border-white/20 dark:border-slate-700/40 flex flex-col items-center gap-6">
+                <div class="flex items-center gap-4 w-full justify-between">
+                    <button id="play-pause-btn" class="glass-btn p-3 rounded-full bg-white/40 dark:bg-slate-700/40 shadow-md border border-white/20 dark:border-slate-600/30 text-indigo-600 dark:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Play/Pause">
+                        <i class="fas fa-play text-2xl" id="play-icon"></i>
+                        <i class="fas fa-pause text-2xl hidden" id="pause-icon"></i>
+                    </button>
+                    <div class="flex flex-col items-center flex-1 mx-4">
+                        <span id="info-name" class="font-semibold text-lg text-slate-800 dark:text-white truncate">Station Name</span>
+                        <span id="info-genre" class="text-sm text-slate-500 dark:text-slate-300 truncate">Genre</span>
+                    </div>
+                    <button id="mute-btn" class="glass-btn p-3 rounded-full bg-white/40 dark:bg-slate-700/40 shadow-md border border-white/20 dark:border-slate-600/30 text-pink-600 dark:text-pink-300 hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Mute/Unmute">
+                        <i class="fas fa-volume-up text-xl" id="volume-up-icon"></i>
+                        <i class="fas fa-volume-mute text-xl hidden" id="volume-mute-icon"></i>
+                    </button>
+                </div>
+                <div class="w-full flex items-center gap-3">
+                    <span id="current-time" class="text-xs text-slate-500 dark:text-slate-400">LIVE</span>
+                    <input type="range" id="progress-bar" min="0" max="100" value="0" class="glass-range w-full h-2 rounded-lg bg-indigo-200 dark:bg-indigo-900/40 appearance-none cursor-pointer">
+                </div>
+                <div class="w-full flex items-center gap-3">
+                    <i class="fas fa-volume-down text-slate-400"></i>
+                    <input type="range" id="volume-bar" min="0" max="100" value="70" class="glass-range w-full h-2 rounded-lg bg-pink-200 dark:bg-pink-900/40 appearance-none cursor-pointer">
+                    <i class="fas fa-volume-up text-slate-400"></i>
+                </div>
+            </div>
             <div id="controls-container" class="mt-auto">
                 <h3 class="sr-only">Audio Player Controls</h3>
-                <audio id="audio-player" controls crossOrigin="anonymous" class="w-full" aria-label="Radio audio player - Use standard media controls to play, pause, or adjust volume" role="application" aria-describedby="audio-help">
+                <audio id="audio-player" controls crossOrigin="anonymous" class="hidden" aria-label="Radio audio player - Use standard media controls to play, pause, or adjust volume" role="application" aria-describedby="audio-help">
                     Your browser does not support the audio element.
                 </audio>
                 <div id="audio-help" class="sr-only">HTML5 audio player with standard media controls. The audio will automatically start when you select a radio station from the list.</div>
             </div>
+
+            <!-- End Custom Audio Player UI -->
         </main>
     </div>
 

@@ -61,7 +61,7 @@ import {
     cleanupAudioContext 
 } from './memory-manager.js';
 import { createEqualizerUI } from './equalizer.js';
-import { initializeVolumeControl, createVolumeControlUI, volumeController } from './volume-control.js';
+import { initializeVolumeControl, volumeController } from './volume-control.js';
 import { APP_CONFIG } from './config.js';
 import { initCodecManager, getCodecInfoSync } from './codec-manager.js';
 import { 
@@ -210,11 +210,9 @@ function initializeApp() {
     const controlsContainer = document.getElementById('controls-container') || document.querySelector('.controls');
     if (controlsContainer) {
         createEqualizerUI(controlsContainer);
-        createVolumeControlUI(controlsContainer);
     } else {
         // Fallback: add to visualizer container
         createEqualizerUI(visualizerContainer);
-        createVolumeControlUI(visualizerContainer);
     }
 
     // Setup lazy loading
@@ -765,3 +763,107 @@ window.addEventListener('beforeunload', cleanup);
 
 // Expose cleanup for manual testing
 window.cleanup = cleanup;
+
+// --- Custom Glassmorphism Audio Player UI Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const customPlayer = document.getElementById('custom-audio-player');
+    if (!customPlayer) return;
+
+    // Get UI elements
+    const playPauseBtn = customPlayer.querySelector('#play-pause-btn');
+    const playIcon = customPlayer.querySelector('#play-icon');
+    const pauseIcon = customPlayer.querySelector('#pause-icon');
+    const muteBtn = customPlayer.querySelector('#mute-btn');
+    const volumeUpIcon = customPlayer.querySelector('#volume-up-icon');
+    const volumeMuteIcon = customPlayer.querySelector('#volume-mute-icon');
+    const progressBar = customPlayer.querySelector('#progress-bar');
+    const volumeBar = customPlayer.querySelector('#volume-bar');
+    const currentTimeEl = customPlayer.querySelector('#current-time');
+    const durationEl = customPlayer.querySelector('#duration');
+    const stationTitle = customPlayer.querySelector('#station-title');
+    const stationGenre = customPlayer.querySelector('#station-genre');
+
+    // Reference to main audio element
+    const audio = document.getElementById('audio-player');
+
+    // Play/Pause logic
+    playPauseBtn.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    });
+    audio.addEventListener('play', () => {
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+    });
+    audio.addEventListener('pause', () => {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+    });
+
+    // Mute/Unmute logic
+    muteBtn.addEventListener('click', () => {
+        audio.muted = !audio.muted;
+        updateMuteUI();
+    });
+    function updateMuteUI() {
+        if (audio.muted) {
+            volumeUpIcon.classList.add('hidden');
+            volumeMuteIcon.classList.remove('hidden');
+        } else {
+            volumeUpIcon.classList.remove('hidden');
+            volumeMuteIcon.classList.add('hidden');
+        }
+    }
+    audio.addEventListener('volumechange', updateMuteUI);
+
+    // Volume control
+    volumeBar.addEventListener('input', (e) => {
+        audio.volume = e.target.value / 100;
+    });
+    audio.addEventListener('volumechange', () => {
+        volumeBar.value = Math.round(audio.volume * 100);
+    });
+
+    // Progress bar logic
+    audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+            progressBar.value = Math.round((audio.currentTime / audio.duration) * 100);
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+            durationEl.textContent = formatTime(audio.duration);
+        } else {
+            progressBar.value = 0;
+            currentTimeEl.textContent = '0:00';
+            durationEl.textContent = '0:00';
+        }
+    });
+    progressBar.addEventListener('input', (e) => {
+        if (audio.duration) {
+            audio.currentTime = (e.target.value / 100) * audio.duration;
+        }
+    });
+
+    // Update station info when station changes
+    function updateCustomPlayerInfo(station) {
+        stationTitle.textContent = station?.name || 'Station Name';
+        stationGenre.textContent = station?.genre || 'Genre';
+    }
+    // Hook into your existing station change logic
+    window.updateCustomPlayerInfo = updateCustomPlayerInfo;
+
+    // Initial UI state
+    updateMuteUI();
+    volumeBar.value = Math.round(audio.volume * 100);
+    currentTimeEl.textContent = '0:00';
+    durationEl.textContent = '0:00';
+});
+
+function formatTime(seconds) {
+    seconds = Math.floor(seconds);
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+}
+// --- End Custom Audio Player UI Logic ---

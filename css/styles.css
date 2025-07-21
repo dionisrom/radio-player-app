@@ -118,7 +118,6 @@ body::before {
         padding: 4rem !important;
         margin: 5vh auto !important;
     }
-}
 
 /* Mobile viewport and body setup */
 @media (max-width: 768px) {
@@ -471,7 +470,7 @@ body::before {
 /* Enhanced Focus indicators for interactive elements */
 .station-item:focus {
     outline: 3px solid rgba(79, 70, 229, 0.6);
-    outline-offset: 4px;
+    outline-offset: 3px;
 }
 
 button:focus,
@@ -1245,6 +1244,8 @@ button:active {
 
 .dark .mute-btn:focus {
     outline: 3px solid rgba(99, 102, 241, 0.6);
+}
+
 /* Enhanced Input and Select Styling */
 input, select {
     background: rgba(255, 255, 255, 0.12) !important;
@@ -1467,7 +1468,7 @@ select#eq-preset option {
         inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #controls-container::before {
@@ -1718,7 +1719,7 @@ audio#audio-player.w-full[controls]:focus {
     background: rgba(15, 23, 42, 0.4) !important;
     border: 2px solid rgba(255, 255, 255, 0.15) !important;
     box-shadow: 
-        0 16px 40px rgba(0, 0, 0, 0.2),
+        0 16px 40px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
 }
 
@@ -1748,7 +1749,6 @@ body audio#audio-player.w-full[controls] {
     width: 100% !important;
     height: 60px !important;
     min-height: 60px !important;
-    outline: none !important;
 }
 
 /* 2. Search Input - Ultra High Specificity */
@@ -2115,4 +2115,60 @@ select#eq-preset {
         font-size: 0.75rem !important;
         min-width: 35px !important;
     }
+}
+
+/* Glassmorphism Audio Player Styles */
+.glass-player-container {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-radius: 2rem;
+    box-shadow: 0 8px 32px rgba(99,102,241,0.08), 0 1.5px 8px rgba(236,72,153,0.08);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+.glass-btn {
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(12px);
+    border-radius: 9999px;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.glass-btn:active {
+    box-shadow: 0 1px 4px rgba(99,102,241,0.12);
+}
+.glass-range {
+    background: linear-gradient(90deg, rgba(99,102,241,0.18) 0%, rgba(236,72,153,0.18) 100%);
+    border-radius: 1rem;
+    outline: none;
+    box-shadow: 0 1px 4px rgba(99,102,241,0.08);
+    accent-color: #6366f1;
+}
+.glass-range::-webkit-slider-thumb {
+    background: rgba(255,255,255,0.7);
+    border: 2px solid #6366f1;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.12);
+    cursor: pointer;
+}
+.glass-range::-moz-range-thumb {
+    background: rgba(255,255,255,0.7);
+    border: 2px solid #6366f1;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.12);
+    cursor: pointer;
+}
+.glass-range::-ms-thumb {
+    background: rgba(255,255,255,0.7);
+    border: 2px solid #6366f1;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.12);
+    cursor: pointer;
 }
