@@ -1496,9 +1496,14 @@ select#eq-preset option {
 #main-content {
     background: rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(8px) !important;
-    border-radius: 24px 0 0 24px !important;
+    border-radius: 24px !important;
     position: relative;
     overflow: hidden;
+}
+
+#radio-list {
+    border-radius: 24px !important;
+    margin-right: 0.5rem !important;
 }
 
 .dark #main-content {
