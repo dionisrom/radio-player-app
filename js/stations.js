@@ -18,7 +18,12 @@ export const stationData = [
     { name: 'Sector 10s', url: 'http://89.223.45.5:8000/zed-flac', genre: '10s Dance & Pop', quality: 'OGG (Lossless)' },
     { name: 'Sector Progressive', url: 'http://89.223.45.5:8000/progressive-flac', genre: 'EDM, Dance, Progressive', quality: 'OGG (Lossless)' },
     { name: 'Sector Jazz', url: 'http://89.223.45.5:8000/jazz-flac', genre: 'Jazz', quality: 'OGG (Lossless)' },
-    { name: 'Radio Paradise (Main)', url: 'https://stream.radioparadise.com/flac', genre: 'Eclectic Rock, Pop, Jazz', quality: 'FLAC (Lossless)' }
+    { name: 'Radio Paradise (Main)', url: 'https://stream.radioparadise.com/flac', genre: 'Eclectic Rock, Pop, Jazz', quality: 'FLAC (Lossless)' },
+    { name: 'Fréquence 3 – Dance', url: 'https://frequence3.net-radio.fr/frequence3dance.flac', genre: 'House and Dance', quality: 'FLAC (Lossless)' },
+    { name: 'Fréquence 3 – Gold', url: 'https://frequence3.net-radio.fr/frequence3gold.flac', genre: '80s and 90s hits', quality: 'FLAC (Lossless)' },
+    { name: 'Fréquence 3 – World', url: 'https://frequence3.net-radio.fr/frequence3world.flac', genre: 'World music', quality: 'FLAC (Lossless)' },
+    { name: 'Hi On Radio - Lounge', url: 'https://mediaserv33.live-streams.nl:8036/live', genre: 'Lounge music', quality: 'MP3 320kbps' },
+
 ];
 
 let stations = [...stationData];
