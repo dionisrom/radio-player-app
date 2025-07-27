@@ -1,0 +1,321 @@
+/* Desktop UI Refinements
+ * Focuses on improving visual hierarchy, hover states, and space utilization for desktop users
+ * These styles will only apply to larger screens (min-width: 768px)
+ */
+
+/* Hover States for Interactive Elements */
+@media (min-width: 768px) {
+    /* Common hover transition */
+    .hover-transition {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* Button hover effects */
+    button:not(.no-hover):hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+    }
+    
+    button:not(.no-hover):active {
+        transform: translateY(1px);
+        filter: brightness(0.95);
+    }
+    
+    /* Icon button hover effects */
+    .icon-button {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .icon-button:hover {
+        transform: scale(1.15);
+    }
+    
+    .icon-button:active {
+        transform: scale(0.95);
+    }
+    
+    /* Glass button hover effects with depth */
+    .glass-btn {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .glass-btn:hover {
+        box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .glass-btn:hover::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+        opacity: 0;
+        animation: glassButtonHover 0.5s forwards;
+    }
+    
+    @keyframes glassButtonHover {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
+    /* Form control hover effects */
+    input:hover, select:hover, textarea:hover {
+        border-color: rgba(99, 102, 241, 0.5);
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: rgba(99, 102, 241, 0.8);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    /* Station hover effects */
+    .station-item:not(.active):hover {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .dark .station-item:not(.active):hover {
+        background-color: rgba(51, 65, 85, 0.4);
+    }
+    
+    /* Card hover effects */
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+                    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Link hover effects */
+    a:not(.no-hover) {
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    
+    a:not(.no-hover):hover {
+        color: rgba(79, 70, 229, 1);
+    }
+    
+    a:not(.no-hover):hover::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: currentColor;
+        transform: scaleX(0);
+        animation: linkUnderline 0.3s forwards;
+        transform-origin: left;
+    }
+    
+    @keyframes linkUnderline {
+        to {
+            transform: scaleX(1);
+        }
+    }
+    
+    /* Toggle button hover effects */
+    .toggle-btn {
+        transition: all 0.2s ease;
+    }
+    
+    .toggle-btn:hover {
+        filter: brightness(1.1);
+    }
+    
+    /* Slider hover effects */
+    input[type="range"]:hover::-webkit-slider-thumb {
+        transform: scale(1.2);
+    }
+    
+    input[type="range"]:hover::-moz-range-thumb {
+        transform: scale(1.2);
+    }
+}
+
+/* Visual Hierarchy Improvements */
+@media (min-width: 768px) {
+    /* Enhance primary elements with stronger visual presence */
+    .primary-element {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Ripple effect for buttons */
+    button {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+    }
+    
+    @keyframes ripple {
+        to {
+            transform: scale(3);
+            opacity: 0;
+        }
+    }
+    
+    /* Enhanced focus styles for keyboard navigation */
+    .keyboard-navigation :focus {
+        outline: 3px solid rgba(79, 70, 229, 0.5);
+        outline-offset: 2px;
+    }
+    
+    .keyboard-navigation .dark :focus {
+        outline-color: rgba(139, 92, 246, 0.5);
+    }
+    
+    /* Apply to key interactive elements */
+    #play-pause-btn {
+        transform: scale(1.1);
+        z-index: 5;
+    }
+    
+    /* Strengthen active station contrast */
+    .station-item.active {
+        background-color: rgba(79, 70, 229, 0.15); /* Indigo color with transparency */
+        border-left: 4px solid rgba(79, 70, 229, 0.8);
+        box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.15);
+        position: relative;
+    }
+    
+    .station-item.active::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background-color: rgba(79, 70, 229, 0.6);
+    }
+    
+    .dark .station-item.active {
+        background-color: rgba(99, 102, 241, 0.25); /* Darker indigo for dark mode */
+        border-left: 4px solid rgba(129, 140, 248, 0.8);
+        box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.2);
+    }
+    
+    .dark .station-item.active::after {
+        background-color: rgba(139, 92, 246, 0.6); /* Purple in dark mode */
+    }
+    
+    /* Add depth to the player */
+    #custom-audio-player {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+                    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Enhance text contrast for important information */
+    #info-name {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+    
+    /* Add subtle separator lines for content sections */
+    .content-section:not(:last-child) {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .dark .content-section:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Add emphasis to metadata display */
+    .metadata-grid {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .dark .metadata-grid {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    /* De-emphasize secondary content */
+    .secondary-content {
+        opacity: 0.85;
+        transition: opacity 0.2s ease-in-out;
+    }
+    
+    .secondary-content:hover {
+        opacity: 1;
+    }
+    
+    /* Fade secondary text */
+    .secondary-text {
+        color: rgba(30, 41, 59, 0.7); /* slate-800 with opacity */
+    }
+    
+    .dark .secondary-text {
+        color: rgba(226, 232, 240, 0.7); /* slate-200 with opacity */
+    }
+    
+    /* Enhanced station list */
+    #station-list {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(79, 70, 229, 0.5) transparent;
+    }
+    
+    #station-list::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    #station-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    #station-list::-webkit-scrollbar-thumb {
+        background-color: rgba(79, 70, 229, 0.5);
+        border-radius: 20px;
+        border: 2px solid transparent;
+    }
+    
+    /* Better distinction for lists and groups */
+    .group-header {
+        font-weight: 600;
+        color: rgba(79, 70, 229, 0.8);
+        margin-top: 1rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .dark .group-header {
+        color: rgba(129, 140, 248, 0.8);
+    }
+    
+    /* Stronger visualization container */
+    #visualizer-container {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .dark #visualizer-container {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+    
+    /* Make key info sections stand out */
+    .key-info {
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+}

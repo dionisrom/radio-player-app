@@ -1,0 +1,124 @@
+/* Media Query Compatibility Layer
+ * This file provides variables and mixins to help transition 
+ * from inline media queries to our centralized system.
+ */
+
+:root {
+  /* Standard breakpoint variables for use in calc() and other places where CSS variables can be used */
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
+}
+
+/*
+ * The following are CSS custom properties designed to be used with PostCSS
+ * For a full implementation, install:
+ * - postcss
+ * - postcss-custom-media
+ * 
+ * Example usage with PostCSS:
+ * 
+ * @import "media-queries.css";
+ * 
+ * @media (--md-min) {
+ *   .element { width: 50%; }
+ * }
+ */
+
+/*
+ * Until PostCSS is implemented, you can use these standard media query blocks
+ * Simply copy and paste the appropriate query from below:
+ */
+
+/* 
+ * Mobile First Media Queries - Copy and paste these as needed
+ * 
+ * Small mobile (320px+)
+ * @media (min-width: 320px) { 
+ *   // your styles here 
+ * }
+ *
+ * Medium mobile (640px+)
+ * @media (min-width: 640px) { 
+ *   // your styles here 
+ * }
+ *
+ * Tablet (768px+)
+ * @media (min-width: 768px) { 
+ *   // your styles here 
+ * }
+ *
+ * Laptop (1024px+)
+ * @media (min-width: 1024px) { 
+ *   // your styles here 
+ * }
+ *
+ * Desktop (1440px+)
+ * @media (min-width: 1440px) { 
+ *   // your styles here 
+ * }
+ */
+
+/*
+ * Desktop First Media Queries - Copy and paste these as needed
+ *
+ * Small mobile and down (below 640px)
+ * @media (max-width: 639px) {
+ *   // your styles here
+ * }
+ *
+ * Tablet and down (below 1024px)
+ * @media (max-width: 1023px) {
+ *   // your styles here
+ * }
+ */
+
+/*
+ * Range Specific Media Queries - Copy and paste these as needed
+ *
+ * Small mobile only (320px-639px)
+ * @media (min-width: 320px) and (max-width: 639px) {
+ *   // your styles here
+ * }
+ *
+ * Medium mobile only (640px-767px)
+ * @media (min-width: 640px) and (max-width: 767px) {
+ *   // your styles here
+ * }
+ *
+ * Tablet only (768px-1023px)
+ * @media (min-width: 768px) and (max-width: 1023px) {
+ *   // your styles here
+ * }
+ *
+ * Laptop only (1024px-1439px)
+ * @media (min-width: 1024px) and (max-width: 1439px) {
+ *   // your styles here
+ * }
+ */
+
+/* 
+ * Feature Queries - Copy and paste these as needed
+ *
+ * Dark Mode
+ * @media (prefers-color-scheme: dark) {
+ *   // your styles here
+ * }
+ *
+ * Reduced Motion
+ * @media (prefers-reduced-motion: reduce) {
+ *   // your styles here
+ * }
+ *
+ * High Contrast
+ * @media (prefers-contrast: high) {
+ *   // your styles here
+ * }
+ *
+ * Print Styles
+ * @media print {
+ *   // your styles here
+ * }
+ */

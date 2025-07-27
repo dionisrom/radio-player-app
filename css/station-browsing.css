@@ -1,0 +1,209 @@
+/* Station browsing styles
+ * Provides grid and list view options for station selection
+ * Enhances the desktop experience with flexible layout options
+ */
+
+/* Common styles for both views */
+.view-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.view-toggle-label {
+    font-size: 0.75rem;
+    color: rgba(100, 116, 139, 0.8);
+}
+
+.view-toggle-button {
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    color: rgba(71, 85, 105, 0.8);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.view-toggle-button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: rgba(51, 65, 85, 1);
+}
+
+.view-toggle-button.active {
+    background-color: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: rgba(79, 70, 229, 1);
+}
+
+.dark .view-toggle-label {
+    color: rgba(148, 163, 184, 0.8);
+}
+
+.dark .view-toggle-button {
+    background-color: rgba(51, 65, 85, 0.3);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    color: rgba(203, 213, 225, 0.8);
+}
+
+.dark .view-toggle-button:hover {
+    background-color: rgba(51, 65, 85, 0.5);
+    color: rgba(226, 232, 240, 1);
+}
+
+.dark .view-toggle-button.active {
+    background-color: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: rgba(129, 140, 248, 1);
+}
+
+/* Grid View Styles (used on desktop) */
+@media (min-width: 768px) {
+    /* Station list in grid view */
+    #station-list.grid-view {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-gap: 1rem;
+        padding: 1rem;
+    }
+    
+    /* Station item in grid view */
+    #station-list.grid-view .station-item {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: all 0.2s ease-in-out;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .dark #station-list.grid-view .station-item {
+        border-color: rgba(51, 65, 85, 0.5);
+        background-color: rgba(30, 41, 59, 0.2);
+    }
+    
+    #station-list.grid-view .station-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .dark #station-list.grid-view .station-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Image in grid view */
+    #station-list.grid-view .station-image-wrapper {
+        width: 100%;
+        height: 80px;
+        margin: 0 auto 0.75rem;
+    }
+    
+    /* Drag handle in grid view */
+    #station-list.grid-view .drag-handle {
+        display: none;
+    }
+    
+    /* Station details in grid view */
+    #station-list.grid-view .grid-container {
+        width: 100%;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+    
+    #station-list.grid-view .station-item-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* Favorite button in grid view */
+    #station-list.grid-view .favorite-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        width: 1.75rem;
+        height: 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .dark #station-list.grid-view .favorite-btn {
+        background-color: rgba(15, 23, 42, 0.7);
+    }
+    
+    /* Active station in grid view */
+    #station-list.grid-view .station-item.active {
+        background-color: rgba(79, 70, 229, 0.1);
+        border-color: rgba(79, 70, 229, 0.3);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+    }
+    
+    .dark #station-list.grid-view .station-item.active {
+        background-color: rgba(99, 102, 241, 0.2);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    
+    #station-list.grid-view .station-item.active::after {
+        display: none;
+    }
+    
+    /* Format badges in grid view */
+    #station-list.grid-view .codec-info {
+        margin-top: 0.25rem;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    /* Compatibility indicator in grid view */
+    #station-list.grid-view .compatibility-indicator {
+        margin-top: 0.5rem;
+        justify-content: center;
+        width: 100%;
+        display: flex;
+    }
+}
+
+/* List View Styles (default) */
+@media (min-width: 768px) {
+    #station-list.list-view .station-item {
+        /* Existing styles for list view */
+        border-left-width: 0;
+        border-right-width: 0;
+        border-top-width: 0;
+        border-radius: 0;
+    }
+    
+    #station-list.list-view .station-item.active {
+        border-left-width: 4px;
+    }
+}
+
+/* Compact List View Styles */
+@media (min-width: 768px) {
+    #station-list.compact-view {
+        /* Compact list view styles - more stations in the same space */
+        padding: 0.25rem 0;
+    }
+    
+    #station-list.compact-view .station-item {
+        padding-top: 0.35rem;
+        padding-bottom: 0.35rem;
+    }
+    
+    #station-list.compact-view .station-image-wrapper {
+        width: 2rem;
+        height: 2rem;
+    }
+    
+    #station-list.compact-view .grid-container {
+        font-size: 0.875rem;
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "radio-player-app",
+  "version": "1.0.0",
+  "description": "Web-based radio player application",
+  "scripts": {
+    "build:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind-optimized.css --minify",
+    "watch:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind-optimized.css --watch"
+  },
+  "keywords": [
+    "radio",
+    "player",
+    "web",
+    "audio"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

@@ -1,0 +1,178 @@
+/* Player Controls Fix CSS 
+   Fixes vertical alignment issues with the custom audio player controls
+*/
+
+/* Ensure audio-player-grid has consistent alignment */
+.audio-player-grid {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: auto !important;
+  min-height: 70px !important;
+  padding: 0.75rem 1rem !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+}
+
+/* Style the play-pause button with fixed dimensions */
+#play-pause-btn {
+  width: 48px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  padding: 0 !important;
+}
+
+/* Center icons inside play/pause button */
+#play-pause-btn i {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  line-height: 0 !important; /* Fix vertical alignment */
+}
+
+/* Style the volume control grid */
+.volume-grid {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 0 1rem !important;
+  gap: 0.75rem !important;
+  height: 30px !important;
+}
+
+/* Ensure volume-bar is properly sized and aligned */
+#volume-bar {
+  flex: 1 !important;
+  height: 6px !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+
+/* Style the mute button with fixed dimensions */
+#mute-btn {
+  width: 42px !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  padding: 0 !important;
+}
+
+/* Center icons inside mute button */
+#mute-btn i {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  line-height: 0 !important; /* Fix vertical alignment */
+}
+
+/* Medium mobile (640px+) */
+@media (min-width: 640px) {
+  .audio-player-grid {
+    min-height: 75px !important;
+  }
+  
+  #play-pause-btn {
+    width: 52px !important;
+    height: 52px !important;
+  }
+  
+  #mute-btn {
+    width: 46px !important;
+    height: 46px !important;
+  }
+}
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .audio-player-grid {
+    min-height: 80px !important;
+  }
+  
+  #play-pause-btn {
+    width: 56px !important;
+    height: 56px !important;
+  }
+  
+  #mute-btn {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+/* Laptop (1024px+) */
+@media (min-width: 1024px) {
+  .audio-player-grid {
+    min-height: 85px !important;
+  }
+  
+  #play-pause-btn {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  #mute-btn {
+    width: 54px !important;
+    height: 54px !important;
+  }
+}
+
+/* Ensure icons are centered within buttons */
+.fas {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Make volume icons smaller and aligned */
+.volume-grid .fas {
+  font-size: 0.875rem !important;
+  opacity: 0.75 !important;
+}
+
+/* Media queries for different screen sizes */
+@media (min-width: 640px) {
+  .audio-player-grid {
+    padding: 0.875rem 1.25rem !important;
+    min-height: 75px !important;
+  }
+  
+  .volume-grid {
+    margin: 0 1.25rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .audio-player-grid {
+    padding: 1rem 1.5rem !important;
+    min-height: 80px !important;
+  }
+  
+  .volume-grid {
+    margin: 0 1.5rem !important;
+    gap: 1rem !important;
+  }
+  
+  #volume-bar {
+    height: 8px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .audio-player-grid {
+    padding: 1.25rem 1.75rem !important;
+  }
+  
+  .volume-grid {
+    margin: 0 2rem !important;
+  }
+}

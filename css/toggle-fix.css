@@ -1,0 +1,124 @@
+/**
+ * Toggle Icon Fix - Ensures that hidden icons are properly hidden
+ * This fixes the issue where toggle buttons (Play/Pause, Mute/Unmute, Dark/Light)
+ * were showing both icons even though one had the 'hidden' class.
+ */
+
+/* Increase specificity to override any conflicting styles */
+.hidden,
+i.hidden,
+.fa-moon.hidden,
+.fa-pause.hidden,
+.fa-volume-mute.hidden,
+#pause-icon.hidden,
+#volume-mute-icon.hidden,
+#mobile-pause-icon.hidden,
+#mobile-volume-mute-icon.hidden {
+    display: none !important;
+}
+
+/* Additional specificity for theme toggle icons */
+#theme-toggle,
+#mobile-theme-toggle {
+    position: relative;
+    overflow: visible;
+}
+
+#theme-toggle .fa-sun,
+#theme-toggle .fa-moon,
+#mobile-theme-toggle .fa-sun,
+#mobile-theme-toggle .fa-moon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#theme-toggle .hidden,
+#mobile-theme-toggle .hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(0.8);
+    pointer-events: none;
+}
+
+/* Extra specificity for player controls */
+#play-pause-btn,
+#mute-btn,
+#mobile-play-pause-btn,
+#mobile-mute-btn {
+    position: relative;
+    overflow: visible;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#play-pause-btn #play-icon,
+#play-pause-btn #pause-icon,
+#mute-btn #volume-up-icon,
+#mute-btn #volume-mute-icon,
+#mobile-play-pause-btn #mobile-play-icon,
+#mobile-play-pause-btn #mobile-pause-icon,
+#mobile-mute-btn #mobile-volume-up-icon,
+#mobile-mute-btn #mobile-volume-mute-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#play-pause-btn .hidden,
+#mute-btn .hidden,
+#mobile-play-pause-btn .hidden,
+#mobile-mute-btn .hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -50%) scale(0.8);
+    pointer-events: none;
+}
+
+/* Fix for any other toggle buttons with multiple icons */
+.icon-button,
+.glass-btn,
+.mobile-action-btn {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Fallback fix for all icon containers that might be affected */
+[class*="btn"],
+[id*="toggle"],
+[id*="button"] {
+    position: relative;
+}
+
+/* Additional fix to ensure hidden elements stay hidden */
+.hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+}

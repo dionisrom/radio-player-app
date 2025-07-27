@@ -412,6 +412,11 @@ function attemptDirectPlayback(audioElement, station) {
     
     console.log(`After load - readyState: ${audioElement.readyState}, networkState: ${audioElement.networkState}`);
     
+    // Dispatch loading event
+    document.dispatchEvent(new CustomEvent('stationLoading', {
+        detail: { stationName: station.name }
+    }));
+    
     return attemptPlayback(audioElement, station);
 }
 
@@ -424,6 +429,12 @@ function attemptPlayback(audioElement, station) {
                 .then(() => {
                     console.log('✅ Playback started successfully');
                     console.log(`Final state - readyState: ${audioElement.readyState}, paused: ${audioElement.paused}, currentTime: ${audioElement.currentTime}`);
+                    
+                    // Dispatch loaded event
+                    document.dispatchEvent(new CustomEvent('stationLoaded', {
+                        detail: { stationName: station.name }
+                    }));
+                    
                     resolve();
                 })
                 .catch(error => {
@@ -633,6 +644,29 @@ export function addConnectionTimeout(audioElement, timeoutMs = 15000) {
     memoryManager.addEventListener(audioElement, 'loadeddata', clearExistingTimeout);
     memoryManager.addEventListener(audioElement, 'canplay', clearExistingTimeout);
     memoryManager.addEventListener(audioElement, 'playing', clearExistingTimeout);
+    
+    // Add buffering event listeners
+    memoryManager.addEventListener(audioElement, 'waiting', () => {
+        console.log('Audio waiting for more data - buffering');
+        // Dispatch buffering event when waiting for data
+        document.dispatchEvent(new CustomEvent('stationBuffering', {
+            detail: { reason: 'Buffering' }
+        }));
+    });
+    
+    memoryManager.addEventListener(audioElement, 'playing', () => {
+        console.log('Audio resumed after buffering');
+        // Dispatch resumed event when playback resumes after buffering
+        document.dispatchEvent(new CustomEvent('stationResumed'));
+    });
+    
+    memoryManager.addEventListener(audioElement, 'stalled', () => {
+        console.log('Audio download stalled');
+        // Dispatch buffering event with stalled reason
+        document.dispatchEvent(new CustomEvent('stationBuffering', {
+            detail: { reason: 'Connection stalled' }
+        }));
+    });
 }
 
 // Offline mode detection

@@ -1,0 +1,214 @@
+/* Loading States for Icecast Player
+ * Provides visual indicators during stream buffering and loading
+ */
+
+/* Main loading overlay - appears during initial stream loading */
+.player-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 50;
+  border-radius: inherit;
+}
+
+.player-loading-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Loading spinner animation */
+.loading-spinner {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.loading-spinner:before,
+.loading-spinner:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(transparent, var(--loading-color, #3b82f6));
+  animation: spin 1.5s linear infinite;
+}
+
+.loading-spinner:before {
+  filter: blur(5px);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading text animation */
+.loading-text {
+  position: relative;
+  color: #fff;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  opacity: 0.9;
+}
+
+.loading-text:after {
+  content: '';
+  animation: loadingDots 1.5s infinite;
+  display: inline-block;
+}
+
+@keyframes loadingDots {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+  100% { content: '.'; }
+}
+
+/* Buffering indicator - appears during playback when buffering */
+.buffering-indicator {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 0.75rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.buffering-indicator.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Buffer wave animation */
+.buffer-wave {
+  display: flex;
+  align-items: center;
+  height: 12px;
+  margin-right: 0.5rem;
+}
+
+.buffer-wave span {
+  display: inline-block;
+  width: 3px;
+  height: 100%;
+  margin-right: 2px;
+  background-color: #3b82f6;
+  border-radius: 3px;
+  animation: bufferWave 1.2s ease-in-out infinite;
+}
+
+.buffer-wave span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.buffer-wave span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.buffer-wave span:nth-child(4) {
+  animation-delay: 0.3s;
+  margin-right: 0;
+}
+
+@keyframes bufferWave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+/* Mini loading indicator for controls */
+.mini-loading {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: mini-spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes mini-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success indicator animation */
+.success-indicator {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background-color: #10b981;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 100;
+}
+
+.success-indicator.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.success-indicator i {
+  margin-right: 0.5rem;
+}
+
+/* Dark theme adjustments */
+html.dark .buffering-indicator {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+html.dark .player-loading-overlay {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .player-loading-overlay {
+    position: fixed;
+    border-radius: 0;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .buffering-indicator {
+    bottom: calc(env(safe-area-inset-bottom) + 4rem);
+  }
+}

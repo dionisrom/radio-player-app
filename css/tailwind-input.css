@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add any custom base styles here */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200 dark:from-indigo-900/80 dark:via-purple-900/80 dark:to-slate-900 text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-300;
+  }
+}
+
+/* Add any component classes */
+@layer components {
+  .glass-btn {
+    @apply flex items-center justify-center w-12 h-12 transition-all hover:scale-105 active:scale-95;
+  }
+  
+  .station-item {
+    @apply w-full text-left border-b border-white/10 dark:border-slate-700/50 hover:bg-white/30 dark:hover:bg-slate-700/50 transition-colors duration-200;
+  }
+  
+  .glass-player-container {
+    @apply backdrop-blur-2xl bg-white/30 dark:bg-slate-800/40 border border-white/20 dark:border-slate-700/40;
+  }
+  
+  /* Extract other common utility patterns into component classes */
+  .icon-button {
+    @apply p-2 rounded-full transition-colors hover:bg-white/20 dark:hover:bg-slate-700/50;
+  }
+  
+  .touch-enhanced {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}

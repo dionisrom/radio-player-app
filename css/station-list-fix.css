@@ -1,0 +1,131 @@
+/* Station List Scrolling Fix */
+
+/* Fix for the station list scroll issue */
+#station-list {
+    height: 100% !important; /* Take full height of the container */
+    overflow-y: auto !important; /* Allow scrolling when content overflows */
+    padding: 0.5rem !important;
+    scrollbar-width: thin !important; /* For Firefox */
+    scrollbar-color: rgba(99, 102, 241, 0.6) rgba(0, 0, 0, 0.05) !important; /* For Firefox */
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    display: block !important; /* Ensure it's a block element */
+}
+
+/* Webkit scrollbar styling */
+#station-list::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+#station-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-radius: 4px !important;
+}
+
+#station-list::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.4) !important;
+    border-radius: 4px !important;
+}
+
+/* Container constraints for proper scrolling */
+.stations-grid {
+    display: grid !important;
+    grid-template-rows: auto auto 1fr !important; /* Header, Search, Station List */
+    height: 100% !important;
+    overflow: hidden !important; /* Ensure overflow is handled by #station-list */
+    padding-bottom: 0 !important;
+}
+
+/* Set up the container for the station list */
+#station-list-container {
+    overflow: hidden !important;
+    position: relative !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Ensure the scrollbar is visible by adding hover effect */
+#station-list:hover::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.8) !important;
+}
+
+/* Add smooth scrolling behavior */
+#station-list {
+    scroll-behavior: smooth !important;
+}
+
+/* Override the problematic max-height setting */
+.overflow-y-auto {
+    max-height: 100% !important;
+}
+
+/* Improve station item styling to ensure proper vertical list */
+.station-item {
+    display: flex !important;
+    width: 100% !important;
+    margin-bottom: 0.75rem !important;
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 767px) {
+    #station-list {
+        max-height: none !important; /* Allow full height */
+    }
+    
+    /* For mobile station list in the overlay panel */
+    #mobile-search-results {
+        max-height: 70vh !important;
+        overflow-y: auto !important;
+        scrollbar-width: thin;
+    }
+    
+    .stations-grid {
+        grid-template-rows: auto auto 1fr !important; /* Maintain proper grid layout */
+    }
+}
+
+/* Desktop adjustments */
+@media (min-width: 768px) {
+    #station-list {
+        min-height: 0 !important; /* Remove minimum height constraint */
+    }
+    
+    /* For grid view */
+    #station-list.grid-view {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+        gap: 1rem !important;
+        overflow-y: auto !important;
+    }
+    
+    .stations-grid {
+        grid-template-rows: auto auto 1fr !important; /* Header, Search, Station List */
+    }
+}
+
+/* Dark mode styles */
+.dark #station-list {
+    background: rgba(30, 41, 59, 0.05);
+}
+
+/* Subtle scroll indicator when needed */
+#station-list.is-scrollable::after {
+    content: "";
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 4px;
+    opacity: 0.4;
+}
+
+/* Fix for safari/mobile browsers */
+@supports (-webkit-touch-callout: none) {
+    #station-list {
+        -webkit-overflow-scrolling: touch !important;
+    }
+}

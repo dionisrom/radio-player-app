@@ -1,5 +1,6 @@
 // Main application entry point
 import { getStations, setStations, findStationByName } from './stations.js';
+import { initStationListScrolling } from './station-list-fix.js';
 import { 
     loadFavorites, 
     saveFavorites, 
@@ -16,9 +17,46 @@ import {
     setErrorCallback,
     setRetryCallback,
     addConnectionTimeout,
-    addOfflineDetection,
-    addStreamQualityMonitoring
+    addOfflineDetection
 } from './player.js';
+import {
+    initMobileNavigation,
+    updateMobileNavForStation,
+    updateMobilePlayState
+} from './mobile-navigation.js';
+import {
+    initBottomControls,
+    updateBottomControlsPlayState,
+    updateBottomControlsStation
+} from './bottom-controls.js';
+import {
+    initMobileFirstLayout
+} from './mobile-first-layout.js';
+import {
+    initDesktopUI
+} from './desktop-ui.js';
+import {
+    initStationBrowsing
+} from './station-browsing.js';
+import {
+    initHoverStates
+} from './hover-states.js';
+import {
+    initDesktopSpaceUtilization
+} from './desktop-space-utilization.js';
+import {
+    initVisualFeedback,
+    updateActiveStation,
+    updatePlayingState,
+    setLoadingState,
+    setErrorState
+} from './visual-feedback.js';
+import {
+    initLoadingStates,
+    setLoadingState as setStreamLoadingState,
+    setBufferingState,
+    showSuccessIndicator
+} from './loading-states.js';
 import { 
     initVisualizer, 
     setupVisualization, 
@@ -64,12 +102,18 @@ import { createEqualizerUI } from './equalizer.js';
 import { initializeVolumeControl, volumeController } from './volume-control.js';
 import { APP_CONFIG } from './config.js';
 import { initCodecManager, getCodecInfoSync } from './codec-manager.js';
+// Performance monitoring imports removed
 import { 
-    performanceMonitor, 
-    recordFrame, 
-    getPerformanceStats, 
-    startPerformanceBenchmark 
+    performanceMonitor 
 } from './performance.js';
+import {
+    animationPerformance,
+    optimizedAnimationFrame,
+    cancelOptimizedAnimationFrame,
+    registerAnimation,
+    getAnimationMetrics,
+    optimizeUIAnimations
+} from './animation-performance.js';
 
 // Application state
 let favorites = [];
@@ -90,6 +134,36 @@ function initializeApp() {
     visualizerContainer = document.getElementById('visualizer-container');
     themeToggleButton = document.getElementById('theme-toggle');
     searchInput = document.getElementById('search-input');
+    
+    // Initialize animation performance optimizations first
+    optimizeUIAnimations();
+    
+    // Initialize mobile navigation
+    initMobileNavigation();
+    
+    // Initialize bottom controls for mobile
+    initBottomControls(audioPlayer);
+    
+    // Initialize mobile-first layout features
+    initMobileFirstLayout();
+    
+    // Initialize desktop UI refinements
+    initDesktopUI();
+    
+    // Initialize station browsing views
+    initStationBrowsing(stationList);
+    
+    // Initialize enhanced hover states
+    initHoverStates();
+    
+    // Initialize desktop space utilization features
+    initDesktopSpaceUtilization();
+    
+    // Initialize visual feedback enhancements
+    initVisualFeedback();
+    
+    // Initialize loading states module
+    initLoadingStates();
 
     // Setup error handling callbacks
     setErrorCallback((message, error, station) => {
@@ -160,24 +234,13 @@ function initializeApp() {
         }
     );
 
-    // Add stream quality monitoring
-    let qualityInterval;
+    // Stream quality monitoring removed as per user request
     audioPlayer.addEventListener('playing', () => {
-        if (qualityInterval) {
-            clearInterval(qualityInterval);
-        }
-        qualityInterval = addStreamQualityMonitoring(audioPlayer, (quality, bufferHealth) => {
-            if (quality === 'poor') {
-                console.warn('Poor connection detected, buffer health:', bufferHealth);
-                updateNowPlaying('Poor connection - buffering may occur', infoGenre);
-            }
-        });
+        // Quality monitoring removed
     });
 
     audioPlayer.addEventListener('ended', () => {
-        if (qualityInterval) {
-            clearInterval(qualityInterval);
-        }
+        // Quality interval cleanup removed
     });
 
     // Load stored data and apply to stations
@@ -257,35 +320,15 @@ function loadStoredData() {
 }
 
 function setupPerformanceMonitoring() {
-    // Start performance stats display update
-    setInterval(updatePerformanceDisplay, 1000);
-    
-    // Enable performance stats display with Ctrl+P
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'p') {
-            e.preventDefault();
-            togglePerformanceDisplay();
-        }
-    });
+    // Performance monitoring removed as per user request
 }
 
 function updatePerformanceDisplay() {
-    const statsElement = document.getElementById('performance-stats');
-    if (!statsElement || statsElement.classList.contains('hidden')) return;
-    
-    const stats = getPerformanceStats();
-    statsElement.innerHTML = `
-        FPS: ${stats.fps} | Quality: ${stats.qualityLevel} | 
-        Memory: ${stats.memory.used}MB | Frames: ${stats.frameCount}
-    `;
+    // Performance display removed as per user request
 }
 
 function togglePerformanceDisplay() {
-    const statsElement = document.getElementById('performance-stats');
-    if (statsElement) {
-        statsElement.classList.toggle('hidden');
-        updateScreenReaderStatus('Performance display toggled', 'polite');
-    }
+    // Performance toggle removed as per user request
 }
 
 // Keyboard Navigation Functions
@@ -316,6 +359,12 @@ function setFocusedStation(index) {
         // Update screen reader
         const stationName = focusedStation.dataset.stationName;
         updateScreenReaderStatus(`Focused: ${stationName}`, 'polite');
+        
+        // Trigger a custom event for the visual feedback module
+        const event = new CustomEvent('stationFocused', {
+            detail: { stationElement: focusedStation }
+        });
+        document.dispatchEvent(event);
     } else {
         currentFocusedStationIndex = -1;
     }
@@ -561,6 +610,12 @@ function handleStationPlay(event) {
             clearLoadingState(infoGenre, station.genre);
             updateScreenReaderStatus(`Now playing: ${station.name}`, 'polite');
             
+            // Update mobile navigation with current station
+            updateMobileNavForStation(station.name);
+            
+            // Update bottom controls with current station
+            updateBottomControlsStation(station.name);
+            
             // Set up metadata with error handling - don't let it break audio playback
             try {
                 setupMetadata(station, audioPlayer, (title) => {
@@ -730,134 +785,357 @@ document.addEventListener('DOMContentLoaded', () => {
     initMemoryManagement();
 });
 
-// Cleanup function for when the app is closed
+// Comprehensive cleanup function for when the app is closed
 function cleanup() {
-    console.log('Cleaning up application resources...');
+    console.log('Starting comprehensive application cleanup...');
+    
+    // Stop audio playback first to prevent resource conflicts
+    if (audioPlayer) {
+        try {
+            audioPlayer.pause();
+            audioPlayer.src = '';
+            audioPlayer.load();
+        } catch (error) {
+            console.warn('Error during audio cleanup:', error);
+        }
+    }
     
     // Clean up visualizer resources
-    if (isVisualizerInitialized()) {
-        cleanupThreeJSObjects(window.visualizerScene);
-        destroyVisualizer();
+    if (typeof isVisualizerInitialized === 'function' && isVisualizerInitialized()) {
+        try {
+            if (window.visualizerScene) {
+                cleanupThreeJSObjects(window.visualizerScene);
+            }
+            destroyVisualizer();
+            console.log('Visualizer cleanup completed');
+        } catch (error) {
+            console.warn('Error during visualizer cleanup:', error);
+        }
     }
     
     // Clean up audio context
-    const analyser = getAnalyser();
-    if (analyser && analyser.context) {
-        cleanupAudioContext(analyser.context, analyser);
+    try {
+        const analyser = typeof getAnalyser === 'function' ? getAnalyser() : null;
+        if (analyser && analyser.context) {
+            cleanupAudioContext(analyser.context, analyser);
+            console.log('Audio context cleanup completed');
+        }
+    } catch (error) {
+        console.warn('Error during audio context cleanup:', error);
     }
     
     // Clean up volume controller
-    volumeController.cleanup();
+    try {
+        if (volumeController && typeof volumeController.cleanup === 'function') {
+            volumeController.cleanup();
+            console.log('Volume controller cleanup completed');
+        }
+    } catch (error) {
+        console.warn('Error during volume controller cleanup:', error);
+    }
     
     // Clear search cache
-    clearSearchCache();
+    try {
+        if (typeof clearSearchCache === 'function') {
+            clearSearchCache();
+            console.log('Search cache cleared');
+        }
+    } catch (error) {
+        console.warn('Error during search cache cleanup:', error);
+    }
     
-    // Run global cleanup
-    memoryManager.cleanup();
+    // Clear references to DOM elements
+    stationList = null;
+    audioPlayer = null;
+    infoName = null;
+    infoGenre = null;
+    visualizerContainer = null;
+    themeToggleButton = null;
+    searchInput = null;
+    
+    // Clear global variables that may hold references
+    currentFocusedStationIndex = -1;
+    favorites = [];
+    currentViz = null;
+    
+    // Clean up animation performance resources
+    try {
+        if (typeof animationPerformance === 'object' && 
+            typeof animationPerformance.cleanupAllAnimations === 'function') {
+            animationPerformance.cleanupAllAnimations();
+            console.log('Animation performance cleanup completed');
+        }
+    } catch (error) {
+        console.warn('Error during animation performance cleanup:', error);
+    }
+    
+    // Run global memory manager cleanup
+    try {
+        memoryManager.cleanup();
+        console.log('Memory manager cleanup completed');
+    } catch (error) {
+        console.warn('Error during memory manager cleanup:', error);
+    }
     
     console.log('Application cleanup completed');
 }
 
-// Register cleanup on page unload
-window.addEventListener('beforeunload', cleanup);
+// Register cleanup on page unload using memory manager to ensure proper tracking
+memoryManager.addEventListener(window, 'beforeunload', cleanup);
 
-// Expose cleanup for manual testing
+// Expose cleanup for manual testing and debugging
 window.cleanup = cleanup;
 
 // --- Custom Glassmorphism Audio Player UI Logic ---
 document.addEventListener('DOMContentLoaded', () => {
-    const customPlayer = document.getElementById('custom-audio-player');
-    if (!customPlayer) return;
-
-    // Get UI elements
-    const playPauseBtn = customPlayer.querySelector('#play-pause-btn');
-    const playIcon = customPlayer.querySelector('#play-icon');
-    const pauseIcon = customPlayer.querySelector('#pause-icon');
-    const muteBtn = customPlayer.querySelector('#mute-btn');
-    const volumeUpIcon = customPlayer.querySelector('#volume-up-icon');
-    const volumeMuteIcon = customPlayer.querySelector('#volume-mute-icon');
-    const progressBar = customPlayer.querySelector('#progress-bar');
-    const volumeBar = customPlayer.querySelector('#volume-bar');
-    const currentTimeEl = customPlayer.querySelector('#current-time');
-    const durationEl = customPlayer.querySelector('#duration');
-    const stationTitle = customPlayer.querySelector('#station-title');
-    const stationGenre = customPlayer.querySelector('#station-genre');
-
-    // Reference to main audio element
-    const audio = document.getElementById('audio-player');
-
-    // Play/Pause logic
-    playPauseBtn.addEventListener('click', () => {
-        if (audio.paused) {
-            audio.play();
-        } else {
-            audio.pause();
+    // Use try-catch for the entire initialization to prevent fatal errors
+    try {
+        const customPlayer = document.getElementById('custom-audio-player');
+        if (!customPlayer) {
+            console.warn('Custom audio player container not found');
+            return;
         }
-    });
-    audio.addEventListener('play', () => {
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
-    });
-    audio.addEventListener('pause', () => {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-    });
 
-    // Mute/Unmute logic
-    muteBtn.addEventListener('click', () => {
-        audio.muted = !audio.muted;
-        updateMuteUI();
-    });
-    function updateMuteUI() {
-        if (audio.muted) {
-            volumeUpIcon.classList.add('hidden');
-            volumeMuteIcon.classList.remove('hidden');
-        } else {
-            volumeUpIcon.classList.remove('hidden');
-            volumeMuteIcon.classList.add('hidden');
+        // Get UI elements with null checks
+        const playPauseBtn = customPlayer.querySelector('#play-pause-btn');
+        const playIcon = playPauseBtn ? playPauseBtn.querySelector('#play-icon') : null;
+        const pauseIcon = playPauseBtn ? playPauseBtn.querySelector('#pause-icon') : null;
+        const muteBtn = customPlayer.querySelector('#mute-btn');
+        const volumeUpIcon = muteBtn ? muteBtn.querySelector('#volume-up-icon') : null;
+        const volumeMuteIcon = muteBtn ? muteBtn.querySelector('#volume-mute-icon') : null;
+        const volumeBar = customPlayer.querySelector('#volume-bar');
+        
+        // These elements may be commented out or not exist
+        const progressBar = customPlayer.querySelector('#progress-bar');
+        const currentTimeEl = customPlayer.querySelector('#current-time');
+        const durationEl = customPlayer.querySelector('#duration');
+        
+        // Map station-title and station-genre to the existing info elements if they don't exist
+        const stationTitle = customPlayer.querySelector('#station-title') || document.getElementById('info-name');
+        const stationGenre = customPlayer.querySelector('#station-genre') || document.getElementById('info-genre');
+
+        // Reference to main audio element
+        const audio = document.getElementById('audio-player');
+        if (!audio) {
+            console.warn('Audio player element not found');
+            return;
         }
+
+        // Play/Pause logic - use memory manager to track event listeners
+        if (playPauseBtn) {
+            const playPauseHandler = () => {
+                try {
+                    if (audio.paused) {
+                        audio.play().catch(err => console.warn('Play failed:', err));
+                    } else {
+                        audio.pause();
+                    }
+                } catch (error) {
+                    console.warn('Error toggling play state:', error);
+                }
+            };
+            
+            memoryManager.addEventListener(playPauseBtn, 'click', playPauseHandler);
+        }
+        
+        // Play event handling
+        const playHandler = () => {
+            try {
+                if (playIcon) playIcon.classList.add('hidden');
+                if (pauseIcon) pauseIcon.classList.remove('hidden');
+                
+                // Update mobile play state - only if function exists
+                if (typeof updateMobilePlayState === 'function') {
+                    updateMobilePlayState(true);
+                }
+                
+                // Update bottom controls - only if function exists
+                if (typeof updateBottomControlsPlayState === 'function') {
+                    updateBottomControlsPlayState(true);
+                }
+            } catch (error) {
+                console.warn('Error handling play event:', error);
+            }
+        };
+        
+        memoryManager.addEventListener(audio, 'play', playHandler);
+        
+        // Pause event handling
+        const pauseHandler = () => {
+            try {
+                if (playIcon) playIcon.classList.remove('hidden');
+                if (pauseIcon) pauseIcon.classList.add('hidden');
+                
+                // Update mobile play state - only if function exists
+                if (typeof updateMobilePlayState === 'function') {
+                    updateMobilePlayState(false);
+                }
+                
+                // Update bottom controls - only if function exists
+                if (typeof updateBottomControlsPlayState === 'function') {
+                    updateBottomControlsPlayState(false);
+                }
+            } catch (error) {
+                console.warn('Error handling pause event:', error);
+            }
+        };
+        
+        memoryManager.addEventListener(audio, 'pause', pauseHandler);
+
+        // Mute/Unmute logic
+        if (muteBtn) {
+            const muteClickHandler = () => {
+                try {
+                    audio.muted = !audio.muted;
+                    updateMuteUI();
+                } catch (error) {
+                    console.warn('Error toggling mute state:', error);
+                }
+            };
+            
+            memoryManager.addEventListener(muteBtn, 'click', muteClickHandler);
+        }
+        
+        function updateMuteUI() {
+            if (!volumeUpIcon || !volumeMuteIcon) return;
+            
+            try {
+                if (audio.muted) {
+                    volumeUpIcon.classList.add('hidden');
+                    volumeMuteIcon.classList.remove('hidden');
+                } else {
+                    volumeUpIcon.classList.remove('hidden');
+                    volumeMuteIcon.classList.add('hidden');
+                }
+            } catch (error) {
+                console.warn('Error updating mute UI:', error);
+            }
+        }
+        
+        // Volume change event
+        if (volumeUpIcon && volumeMuteIcon) {
+            const volumeChangeHandler = () => {
+                try {
+                    updateMuteUI();
+                } catch (error) {
+                    console.warn('Error handling volume change:', error);
+                }
+            };
+            
+            memoryManager.addEventListener(audio, 'volumechange', volumeChangeHandler);
+        }
+
+        // Volume control
+        if (volumeBar) {
+            const volumeInputHandler = (e) => {
+                try {
+                    const newVolume = parseFloat(e.target.value) / 100;
+                    if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
+                        audio.volume = newVolume;
+                    }
+                } catch (error) {
+                    console.warn('Error handling volume input:', error);
+                }
+            };
+            
+            memoryManager.addEventListener(volumeBar, 'input', volumeInputHandler);
+            
+            const volumeChangeHandler = () => {
+                try {
+                    volumeBar.value = Math.round(audio.volume * 100);
+                } catch (error) {
+                    console.warn('Error updating volume bar:', error);
+                }
+            };
+            
+            memoryManager.addEventListener(audio, 'volumechange', volumeChangeHandler);
+        }
+
+        // Progress bar logic - only add if the element exists
+        if (progressBar) {
+            const timeUpdateHandler = () => {
+                try {
+                    if (audio.duration && !isNaN(audio.duration)) {
+                        progressBar.value = Math.round((audio.currentTime / audio.duration) * 100);
+                        
+                        if (currentTimeEl) {
+                            currentTimeEl.textContent = formatTime(audio.currentTime);
+                        }
+                        
+                        if (durationEl) {
+                            durationEl.textContent = formatTime(audio.duration);
+                        }
+                    } else {
+                        progressBar.value = 0;
+                        
+                        if (currentTimeEl) {
+                            currentTimeEl.textContent = '0:00';
+                        }
+                        
+                        if (durationEl) {
+                            durationEl.textContent = '0:00';
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Error updating progress bar:', error);
+                }
+            };
+            
+            memoryManager.addEventListener(audio, 'timeupdate', timeUpdateHandler);
+            
+            const progressInputHandler = (e) => {
+                try {
+                    if (audio.duration && !isNaN(audio.duration)) {
+                        const newTime = (parseFloat(e.target.value) / 100) * audio.duration;
+                        if (!isNaN(newTime) && newTime >= 0 && newTime <= audio.duration) {
+                            audio.currentTime = newTime;
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Error setting audio position:', error);
+                }
+            };
+            
+            memoryManager.addEventListener(progressBar, 'input', progressInputHandler);
+        }
+
+        // Update station info when station changes - with defensive programming
+        function updateCustomPlayerInfo(station) {
+            try {
+                if (stationTitle && station && typeof station === 'object') {
+                    stationTitle.textContent = station.name || 'Station Name';
+                }
+                
+                if (stationGenre && station && typeof station === 'object') {
+                    stationGenre.textContent = station.genre || 'Genre';
+                }
+            } catch (error) {
+                console.warn('Error updating custom player info:', error);
+            }
+        }
+        
+        // Hook into your existing station change logic
+        window.updateCustomPlayerInfo = updateCustomPlayerInfo;
+
+        // Initial UI state - with defensive programming
+        try {
+            if (volumeUpIcon && volumeMuteIcon) updateMuteUI();
+            
+            if (volumeBar && audio && typeof audio.volume === 'number') {
+                volumeBar.value = Math.round(audio.volume * 100);
+            }
+            
+            if (currentTimeEl) currentTimeEl.textContent = '0:00';
+            if (durationEl) durationEl.textContent = '0:00';
+        } catch (error) {
+            console.warn('Error setting initial UI state:', error);
+        }
+        
+        console.log('Custom audio player initialized successfully');
+        
+    } catch (error) {
+        console.error('Failed to initialize custom audio player:', error);
     }
-    audio.addEventListener('volumechange', updateMuteUI);
-
-    // Volume control
-    volumeBar.addEventListener('input', (e) => {
-        audio.volume = e.target.value / 100;
-    });
-    audio.addEventListener('volumechange', () => {
-        volumeBar.value = Math.round(audio.volume * 100);
-    });
-
-    // Progress bar logic
-    audio.addEventListener('timeupdate', () => {
-        // if (audio.duration) {
-        //     progressBar.value = Math.round((audio.currentTime / audio.duration) * 100);
-        //     currentTimeEl.textContent = formatTime(audio.currentTime);
-        //     //durationEl.textContent = formatTime(audio.duration);
-        // } else {
-        //     progressBar.value = 0;
-        //     currentTimeEl.textContent = '0:00';
-        //     durationEl.textContent = '0:00';
-        // }
-    });
-    progressBar.addEventListener('input', (e) => {
-        if (audio.duration) {
-            audio.currentTime = (e.target.value / 100) * audio.duration;
-        }
-    });
-
-    // Update station info when station changes
-    function updateCustomPlayerInfo(station) {
-        stationTitle.textContent = station?.name || 'Station Name';
-        stationGenre.textContent = station?.genre || 'Genre';
-    }
-    // Hook into your existing station change logic
-    window.updateCustomPlayerInfo = updateCustomPlayerInfo;
-
-    // Initial UI state
-    updateMuteUI();
-    volumeBar.value = Math.round(audio.volume * 100);
-    currentTimeEl.textContent = '0:00';
-    durationEl.textContent = '0:00';
 });
 
 function formatTime(seconds) {

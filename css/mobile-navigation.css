@@ -1,0 +1,411 @@
+/* Mobile Navigation Styles */
+
+/* Variables for mobile navigation */
+:root {
+  --mobile-nav-height: 60px;
+  --mobile-nav-button-size: 44px;
+  --mobile-nav-z-index: 100;
+  --mobile-nav-animation: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --mobile-nav-drawer-width: 100%;
+  --mobile-nav-drawer-height: 70vh;
+  --mobile-nav-handle-height: 4px;
+  --mobile-nav-panel-bg: rgba(255, 255, 255, 0.9);
+  --mobile-nav-panel-bg-dark: rgba(15, 23, 42, 0.95);
+}
+
+/* Mobile Station List Drawer - Base styles (closed state) */
+.mobile-station-drawer {
+  display: none; /* Initially hidden, will be shown on mobile */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: var(--mobile-nav-drawer-width);
+  height: var(--mobile-nav-drawer-height);
+  background: var(--mobile-nav-panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: var(--mobile-nav-z-index);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(100%);
+  transition: transform var(--mobile-nav-animation);
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Dark mode for mobile drawer */
+.dark .mobile-station-drawer {
+  background: var(--mobile-nav-panel-bg-dark);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Open state for the drawer */
+.mobile-station-drawer.open {
+  transform: translateY(0);
+}
+
+/* Drawer handle for sliding */
+.drawer-handle {
+  width: 50px;
+  height: var(--mobile-nav-handle-height);
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 2px;
+  margin: 10px auto;
+  cursor: grab;
+}
+
+/* Drawer header */
+.drawer-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Drawer content */
+.drawer-content {
+  height: calc(var(--mobile-nav-drawer-height) - 60px);
+  overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Station Nav Toggle Button (visible on mobile) */
+.station-nav-toggle {
+  display: none; /* Initially hidden, shown on mobile */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.9));
+  color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border: none;
+  z-index: calc(var(--mobile-nav-z-index) - 1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.station-nav-toggle:active {
+  transform: scale(0.95);
+}
+
+.station-nav-toggle i {
+  font-size: 1.5rem;
+}
+
+.station-nav-toggle.open i.fa-list {
+  display: none;
+}
+
+.station-nav-toggle:not(.open) i.fa-times {
+  display: none;
+}
+
+/* Bottom navigation bar on mobile */
+.bottom-nav-bar {
+  display: none; /* Initially hidden, shown on mobile */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--mobile-nav-height);
+  background: var(--mobile-nav-panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: var(--mobile-nav-z-index);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0 1rem;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.dark .bottom-nav-bar {
+  background: var(--mobile-nav-panel-bg-dark);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Bottom nav items */
+.bottom-nav-items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: 100%;
+  align-items: center;
+  justify-items: center;
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  width: 100%;
+  height: 100%;
+}
+
+.bottom-nav-item:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.bottom-nav-item i {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+}
+
+.bottom-nav-item span {
+  font-size: 0.75rem;
+}
+
+/* Compact Station Card for Mobile */
+.compact-station-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s;
+}
+
+.compact-station-card:active {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.compact-station-card .station-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-right: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compact-station-card .station-info {
+  min-width: 0;
+  padding-right: 8px;
+}
+
+.compact-station-card .station-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact-station-card .station-genre {
+  font-size: 0.75rem;
+  color: rgba(100, 116, 139, 0.8);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact-station-card .station-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Mobile-specific customizations */
+@media (max-width: 767px) {
+  /* Show the mobile UI elements */
+  .mobile-station-drawer,
+  .station-nav-toggle {
+    display: flex;
+  }
+
+  /* Hide the sidebar on mobile - it will be replaced by drawer */
+  #radio-list.responsive-hidden {
+    display: none !important;
+  }
+  
+  /* Full-width player when drawer is closed */
+  #main-content.full-width {
+    width: 100% !important;
+  }
+  
+  /* Add padding to avoid content being covered by bottom navigation */
+  main#main-content {
+    padding-bottom: calc(var(--mobile-nav-height) + 1rem) !important;
+  }
+  
+  /* Show bottom nav bar */
+  .bottom-nav-bar {
+    display: block;
+  }
+  
+  /* Add spacing for fixed footer */
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  
+  /* Fix player controls to be accessible with drawer open */
+  #custom-audio-player.mobile-fixed {
+    position: sticky;
+    bottom: calc(var(--mobile-nav-height) + 20px);
+    z-index: var(--mobile-nav-z-index);
+    margin: 0 auto;
+    max-width: 90%;
+  }
+
+  /* Show only the essential station info in compact view */
+  .station-item-grid.compact-mobile {
+    grid-template-columns: auto 1fr auto !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 1rem !important;
+  }
+  
+  /* Make station search more compact on mobile */
+  input#search-input.mobile-compact {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 12px !important;
+  }
+  
+  /* Filter menu for mobile */
+  .mobile-filter-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--mobile-nav-panel-bg);
+    border-radius: 0 0 12px 12px;
+    padding: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    transform-origin: top center;
+    transform: scaleY(0);
+    opacity: 0;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  
+  .mobile-filter-menu.open {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  
+  .dark .mobile-filter-menu {
+    background: var(--mobile-nav-panel-bg-dark);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Mobile search optimizations */
+  .drawer-search-container {
+    position: relative;
+    padding: 0.75rem;
+  }
+  
+  .drawer-search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    padding-left: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+  }
+  
+  .drawer-search-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(100, 116, 139, 0.8);
+    pointer-events: none;
+  }
+  
+  /* Animations for drawer */
+  @keyframes slideInUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  
+  @keyframes slideOutDown {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+  }
+  
+  .drawer-slide-in {
+    animation: slideInUp var(--mobile-nav-animation) forwards;
+  }
+  
+  .drawer-slide-out {
+    animation: slideOutDown var(--mobile-nav-animation) forwards;
+  }
+}
+
+/* Landscape mode optimizations */
+@media (max-width: 767px) and (orientation: landscape) {
+  .mobile-station-drawer {
+    height: 85vh;
+  }
+  
+  .drawer-content {
+    height: calc(85vh - 60px);
+  }
+  
+  /* Compact view for landscape orientation */
+  .compact-station-card {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .compact-station-card .station-logo {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Two column grid for landscape station list */
+  .drawer-content .station-list-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+}
+
+/* Small devices (under 360px) */
+@media (max-width: 359px) {
+  .station-nav-toggle {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  .station-nav-toggle i {
+    font-size: 1.25rem;
+  }
+  
+  /* Even more compact for very small screens */
+  .compact-station-card {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .compact-station-card .station-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+  }
+  
+  .compact-station-card .station-name {
+    font-size: 0.85rem;
+  }
+  
+  .compact-station-card .station-genre {
+    font-size: 0.7rem;
+  }
+}

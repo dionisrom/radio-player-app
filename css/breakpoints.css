@@ -1,0 +1,268 @@
+/* Responsive Design Breakpoints
+ * This file centralizes all breakpoint definitions for consistent responsive behavior
+ * Breakpoints are defined as standard screen sizes for testing:
+ * - xs: 320px  (Small mobile phones)
+ * - sm: 640px  (Large mobile phones)
+ * - md: 768px  (Tablets)
+ * - lg: 1024px (Laptops)
+ * - xl: 1440px (Desktops)
+ */
+
+:root {
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
+}
+
+/* 
+ * Mobile First Approach:
+ * Default styles should target mobile (smallest viewport)
+ * Media queries then add complexity for larger screens
+ */
+
+/* Small mobile (320px) - Base styles apply here */
+
+/* Medium mobile (640px+) */
+@media (min-width: 640px) {
+  .sm-only {
+    display: block !important;
+  }
+  
+  .sm-hidden {
+    display: none !important;
+  }
+  
+  .sm-grid {
+    display: grid !important;
+  }
+  
+  .sm-flex {
+    display: flex !important;
+  }
+}
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .md-only {
+    display: block !important;
+  }
+  
+  .md-hidden {
+    display: none !important;
+  }
+  
+  .md-grid {
+    display: grid !important;
+  }
+  
+  .md-flex {
+    display: flex !important;
+  }
+  
+  .md-text-left {
+    text-align: left !important;
+  }
+  
+  .md-text-center {
+    text-align: center !important;
+  }
+  
+  .md-text-right {
+    text-align: right !important;
+  }
+}
+
+/* Laptop (1024px+) */
+@media (min-width: 1024px) {
+  .lg-only {
+    display: block !important;
+  }
+  
+  .lg-hidden {
+    display: none !important;
+  }
+  
+  .lg-grid {
+    display: grid !important;
+  }
+  
+  .lg-flex {
+    display: flex !important;
+  }
+}
+
+/* Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .xl-only {
+    display: block !important;
+  }
+  
+  .xl-hidden {
+    display: none !important;
+  }
+  
+  .xl-grid {
+    display: grid !important;
+  }
+  
+  .xl-flex {
+    display: flex !important;
+  }
+}
+
+/* 
+ * Max-width breakpoints for specific targeting
+ * Use these to create exceptions or limit styles to specific viewport ranges
+ */
+
+/* Small mobile only (< 640px) */
+@media (max-width: 639px) {
+  .max-sm-only {
+    display: block !important;
+  }
+  
+  .max-sm-hidden {
+    display: none !important;
+  }
+}
+
+/* Medium mobile and smaller (< 768px) */
+@media (max-width: 767px) {
+  .max-md-only {
+    display: block !important;
+  }
+  
+  .max-md-hidden {
+    display: none !important;
+  }
+}
+
+/* Tablet and smaller (< 1024px) */
+@media (max-width: 1023px) {
+  .max-lg-only {
+    display: block !important;
+  }
+  
+  .max-lg-hidden {
+    display: none !important;
+  }
+}
+
+/* Laptop and smaller (< 1440px) */
+@media (max-width: 1439px) {
+  .max-xl-only {
+    display: block !important;
+  }
+  
+  .max-xl-hidden {
+    display: none !important;
+  }
+}
+
+/* Container width constraints at different breakpoints */
+.responsive-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    max-width: 600px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    max-width: 960px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .responsive-container {
+    max-width: 1320px;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Font size scaling */
+html {
+  /* 
+   * Setting base font size as a percentage of user's browser default
+   * Most browsers default to 16px, so:
+   * 14px ÷ 16px = 0.875 = 87.5%
+   * This maintains accessibility by respecting user's preferences
+   */
+  font-size: 87.5%; /* 14px if browser default is 16px */
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 93.75%; /* 15px if browser default is 16px */
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 100%; /* 16px - browser default */
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 100%; /* 16px - browser default */
+  }
+}
+
+@media (min-width: 1440px) {
+  html {
+    font-size: 112.5%; /* 18px if browser default is 16px */
+  }
+}
+
+/* Spacing scale that responds to viewport */
+:root {
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --space-xs: 0.375rem;
+    --space-sm: 0.75rem;
+    --space-md: 1.25rem;
+    --space-lg: 2rem;
+    --space-xl: 2.5rem;
+    --space-2xl: 4rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2.5rem;
+    --space-xl: 3rem;
+    --space-2xl: 5rem;
+  }
+}

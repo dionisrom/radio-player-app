@@ -1,0 +1,283 @@
+/* Vertical Spacing
+ * This file enhances the spacing between interactive elements for better touch accuracy
+ * Particularly important for mobile interfaces to prevent accidental taps
+ */
+
+:root {
+  /* Base spacing variables - Mobile First (320px) */
+  --space-between-touch-sm: 0.75rem;   /* 12px - minimum space between touch targets */
+  --space-between-touch-md: 1rem;      /* 16px - standard spacing */
+  --space-between-touch-lg: 1.25rem;   /* 20px - enhanced spacing for important UI elements */
+  --space-between-touch-xl: 1.5rem;    /* 24px - maximum spacing for critical controls */
+  
+  /* Control groups spacing */
+  --control-group-gap-sm: 0.75rem;     /* 12px */
+  --control-group-gap-md: 1rem;        /* 16px */
+  --control-group-gap-lg: 1.5rem;      /* 24px */
+  
+  /* Section spacing */
+  --section-spacing-sm: 1.25rem;       /* 20px */
+  --section-spacing-md: 1.75rem;       /* 28px */
+  --section-spacing-lg: 2.25rem;       /* 36px */
+  
+  /* List item spacing */
+  --list-item-spacing-sm: 0.625rem;    /* 10px */
+  --list-item-spacing-md: 0.875rem;    /* 14px */
+  --list-item-spacing-lg: 1.25rem;     /* 20px */
+}
+
+/* Medium mobile (640px+) */
+@media (min-width: 640px) {
+  :root {
+    --space-between-touch-sm: 0.625rem; /* 10px - slightly reduced for larger screens */
+    --space-between-touch-md: 0.875rem; /* 14px */
+    --space-between-touch-lg: 1.125rem; /* 18px */
+    --space-between-touch-xl: 1.375rem; /* 22px */
+  }
+}
+
+/* Enhanced vertical spacing for mobile touch devices */
+@media (pointer: coarse) {
+  /* Core vertical spacing - add to any adjacent interactive elements */
+  .touch-spacing-y > * + * {
+    margin-top: var(--space-between-touch-md);
+  }
+  
+  .touch-spacing-y-sm > * + * {
+    margin-top: var(--space-between-touch-sm);
+  }
+  
+  .touch-spacing-y-lg > * + * {
+    margin-top: var(--space-between-touch-lg);
+  }
+  
+  .touch-spacing-y-xl > * + * {
+    margin-top: var(--space-between-touch-xl);
+  }
+  
+  /* Vertical spacing for interactive elements with a common parent */
+  .interactive-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--control-group-gap-md);
+  }
+  
+  .interactive-group-sm {
+    gap: var(--control-group-gap-sm);
+  }
+  
+  .interactive-group-lg {
+    gap: var(--control-group-gap-lg);
+  }
+  
+  /* Apply to station list items */
+  .station-item + .station-item {
+    margin-top: var(--list-item-spacing-md) !important;
+  }
+  
+  /* Section spacing */
+  .section-spacing > * + * {
+    margin-top: var(--section-spacing-md);
+  }
+  
+  .section-spacing-sm > * + * {
+    margin-top: var(--section-spacing-sm);
+  }
+  
+  .section-spacing-lg > * + * {
+    margin-top: var(--section-spacing-lg);
+  }
+  
+  /* Specific element spacing */
+  /* Audio controls vertical spacing */
+  .audio-controls-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-between-touch-lg);
+  }
+  
+  /* Buttons that appear in a row need vertical space when they wrap */
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-between-touch-md);
+  }
+  
+  /* Form controls need comfortable spacing */
+  form .form-group + .form-group {
+    margin-top: var(--space-between-touch-lg);
+  }
+  
+  /* Labels should be well-separated from their controls */
+  label + input,
+  label + select,
+  label + textarea {
+    margin-top: 0.5rem; /* 8px - slightly less as they're directly related */
+  }
+  
+  /* Search input + results should be separated */
+  .search-container .search-input + .search-results {
+    margin-top: var(--space-between-touch-md);
+  }
+}
+
+/* General spacing improvements for all devices */
+/* Container sections */
+.app-section + .app-section {
+  margin-top: var(--section-spacing-md);
+}
+
+/* Card elements */
+.card-element + .card-element {
+  margin-top: var(--section-spacing-sm);
+}
+
+/* Enhanced station list spacing */
+#station-list {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Enhanced spacing between station list items */
+.station-item {
+  margin-top: var(--list-item-spacing-sm) !important;
+  margin-bottom: var(--list-item-spacing-sm) !important;
+}
+
+/* Improved spacing for nested interactive elements within station items */
+.station-item [role="button"],
+.station-item button {
+  margin: 0.25rem 0;
+}
+
+/* Add breathing space to station item internals */
+.station-item .grid-container {
+  row-gap: 0.5rem;
+}
+
+/* Add spacing between player sections */
+.player-controls-grid > * + * {
+  margin-top: var(--space-between-touch-lg);
+}
+
+/* Enhanced control spacing */
+.control-section {
+  margin-top: var(--space-between-touch-lg);
+  margin-bottom: var(--space-between-touch-lg);
+}
+
+/* Visualizer needs space from elements above and below */
+#visualizer-container {
+  margin-top: var(--space-between-touch-lg);
+  margin-bottom: var(--space-between-touch-lg);
+}
+
+/* Now playing information needs breathing room */
+#info-name {
+  margin-bottom: 0.5rem !important;
+}
+
+#info-genre {
+  margin-top: 0.5rem !important;
+}
+
+/* Add space to the volume control to prevent accidental touches */
+.volume-grid {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Audio player controls need clear separation */
+.audio-player-grid {
+  gap: 1rem !important;
+}
+
+/* Search input needs space from elements above and below */
+#search-input {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Header elements need spacing */
+header {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+/* On mobile, add more spacing to the equalizer sliders */
+@media (max-width: 767px) {
+  .equalizer-container .grid {
+    gap: 1.5rem !important;
+  }
+  
+  .slider-container + .slider-container {
+    margin-top: 1rem !important;
+  }
+  
+  /* Volume controls need more space on mobile */
+  .volume-container {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+  
+  /* Separate control sections more clearly */
+  #controls-container > * + * {
+    margin-top: 1.5rem !important;
+  }
+}
+
+/* Tablet and above adjustments */
+@media (min-width: 768px) {
+  .station-item {
+    margin-top: var(--list-item-spacing-sm) !important;
+    margin-bottom: var(--list-item-spacing-sm) !important;
+  }
+  
+  /* Adjust spacing for desktop-sized screens */
+  .app-section + .app-section {
+    margin-top: var(--section-spacing-sm);
+  }
+}
+
+/* Helper classes for direct spacing control */
+.spacing-y-xs > * + * {
+  margin-top: 0.25rem !important; /* 4px */
+}
+
+.spacing-y-sm > * + * {
+  margin-top: 0.5rem !important; /* 8px */
+}
+
+.spacing-y-md > * + * {
+  margin-top: 1rem !important; /* 16px */
+}
+
+.spacing-y-lg > * + * {
+  margin-top: 1.5rem !important; /* 24px */
+}
+
+.spacing-y-xl > * + * {
+  margin-top: 2rem !important; /* 32px */
+}
+
+/* Space all direct children evenly */
+.space-y-even {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Mobile drawer specific spacing adjustments */
+.mobile-drawer .station-item {
+  margin-top: var(--list-item-spacing-md) !important;
+  margin-bottom: var(--list-item-spacing-md) !important;
+}
+
+.mobile-nav-bar {
+  padding: 0.75rem !important;
+}
+
+/* Bottom control panel needs extra padding to prevent accidental touches near screen edge */
+.mobile-nav-bar-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0.75rem) !important;
+}

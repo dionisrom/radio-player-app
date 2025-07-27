@@ -1,0 +1,188 @@
+/* Animation Performance Optimizations */
+
+/* 
+ * Hardware acceleration hints
+ * Apply to elements that are animated to improve performance
+ */
+.hardware-accelerated {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Use for elements that change opacity */
+.hw-accelerate-opacity {
+  will-change: opacity;
+}
+
+/* Use for elements that change transform properties */
+.hw-accelerate-transform {
+  will-change: transform;
+}
+
+/* Use for elements that animate both transform and opacity */
+.hw-accelerate-transform-opacity {
+  will-change: transform, opacity;
+}
+
+/* 
+ * Reduced motion support
+ * Respect user preference for reduced motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-motion,
+  .motion-transition {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* Replace animations with immediate state changes */
+  .fade-in {
+    opacity: 1 !important;
+  }
+  
+  .slide-in {
+    transform: none !important;
+  }
+  
+  /* Hide purely decorative animations when reduced motion is preferred */
+  .decorative-animation {
+    display: none !important;
+  }
+}
+
+/* 
+ * Mobile animation optimizations
+ * Simpler animations for mobile devices to improve performance
+ */
+@media (max-width: 768px) {
+  .complex-animation {
+    animation-duration: 200ms !important; /* Faster animations on mobile */
+  }
+  
+  /* Simplify transitions on mobile */
+  .mobile-simplified {
+    transition-property: opacity !important; /* Only use opacity transitions on mobile */
+    transition-duration: 200ms !important;   /* Shorter transitions on mobile */
+  }
+}
+
+/* 
+ * Low power optimizations - applied by JS when battery is low
+ * Add .low-power class to body when needed
+ */
+.low-power .animation-intensive {
+  animation: none !important;
+  transition: none !important;
+}
+
+.low-power .background-effect {
+  display: none !important;
+}
+
+/* 
+ * Efficient transition properties
+ * Only animate transform and opacity for best performance
+ */
+.efficient-transition {
+  transition-property: transform, opacity;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 
+ * Optimize repaint-heavy animations
+ * Use compositor-only properties for transitions
+ */
+.optimized-animation {
+  /* Use transform instead of top/left for position changes */
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+/* Use these classes instead of animating top/left */
+.optimized-move-up {
+  transform: translateY(-10px);
+}
+
+.optimized-move-down {
+  transform: translateY(10px);
+}
+
+.optimized-move-left {
+  transform: translateX(-10px);
+}
+
+.optimized-move-right {
+  transform: translateX(10px);
+}
+
+/* 
+ * Avoid layout thrashing
+ * Group properties that trigger layout recalculation
+ */
+.layout-transition {
+  /* Read layout properties once, then apply changes */
+  transition: transform 300ms ease; /* Instead of width/height */
+}
+
+/* Scale instead of changing width/height */
+.grow-transform {
+  transform: scale(1.1);
+}
+
+.shrink-transform {
+  transform: scale(0.9);
+}
+
+/* 
+ * Animation containment for complex DOM elements
+ * Isolate repaints to specific elements
+ */
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
+/* 
+ * Optimize animation performance for player UI elements
+ * Apply to existing elements
+ */
+
+/* Optimize station list transitions */
+#radio-list .station-item {
+  will-change: transform, opacity;
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+/* Optimize playback controls */
+#play-pause-btn,
+#mute-btn,
+.control-btn {
+  will-change: transform;
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+/* Optimize visualizer container */
+#visualizer {
+  will-change: opacity;
+  transition: opacity 200ms ease;
+}
+
+/* Optimize metadata display animation */
+#track-info {
+  will-change: transform, opacity;
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+/* Optimize volume slider */
+.volume-track {
+  will-change: transform;
+  transition: transform 150ms ease;
+}

@@ -1,0 +1,304 @@
+/* Font Size Units
+ * This file centralizes all font size definitions using rem units for better accessibility
+ * Based on our standardized breakpoints and responsive typography
+ * - xs: 320px  (Small mobile phones)
+ * - sm: 640px  (Large mobile phones)
+ * - md: 768px  (Tablets)
+ * - lg: 1024px (Laptops)
+ * - xl: 1440px (Desktops)
+ */
+
+:root {
+  /* Font size scale - Using rem units for accessibility */
+  --font-size-xs: 0.75rem;   /* 12px at 16px base */
+  --font-size-sm: 0.875rem;  /* 14px at 16px base */
+  --font-size-md: 1rem;      /* 16px at 16px base */
+  --font-size-lg: 1.125rem;  /* 18px at 16px base */
+  --font-size-xl: 1.25rem;   /* 20px at 16px base */
+  --font-size-2xl: 1.5rem;   /* 24px at 16px base */
+  --font-size-3xl: 1.875rem; /* 30px at 16px base */
+  --font-size-4xl: 2.25rem;  /* 36px at 16px base */
+  --font-size-5xl: 3rem;     /* 48px at 16px base */
+  
+  /* Fine-grained font sizes for specific use cases */
+  --font-size-tiny: 0.625rem;   /* 10px at 16px base */
+  --font-size-small: 0.75rem;   /* 12px at 16px base */
+  --font-size-base: 1rem;       /* 16px at 16px base */
+  --font-size-large: 1.25rem;   /* 20px at 16px base */
+  --font-size-xlarge: 1.5rem;   /* 24px at 16px base */
+}
+
+/* Font size utility classes */
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-md {
+  font-size: var(--font-size-md);
+}
+
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+
+.text-2xl {
+  font-size: var(--font-size-2xl);
+}
+
+.text-3xl {
+  font-size: var(--font-size-3xl);
+}
+
+.text-4xl {
+  font-size: var(--font-size-4xl);
+}
+
+.text-5xl {
+  font-size: var(--font-size-5xl);
+}
+
+/* Special size classes */
+.text-tiny {
+  font-size: var(--font-size-tiny);
+}
+
+.text-small {
+  font-size: var(--font-size-small);
+}
+
+.text-base {
+  font-size: var(--font-size-base);
+}
+
+.text-large {
+  font-size: var(--font-size-large);
+}
+
+.text-xlarge {
+  font-size: var(--font-size-xlarge);
+}
+
+/* Responsive font size classes - Small mobile (320px) is the base */
+
+/* Medium mobile (640px+) */
+@media (min-width: 640px) {
+  .sm-text-xs {
+    font-size: var(--font-size-xs);
+  }
+  
+  .sm-text-sm {
+    font-size: var(--font-size-sm);
+  }
+  
+  .sm-text-md {
+    font-size: var(--font-size-md);
+  }
+  
+  .sm-text-lg {
+    font-size: var(--font-size-lg);
+  }
+  
+  .sm-text-xl {
+    font-size: var(--font-size-xl);
+  }
+  
+  .sm-text-2xl {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .md-text-xs {
+    font-size: var(--font-size-xs);
+  }
+  
+  .md-text-sm {
+    font-size: var(--font-size-sm);
+  }
+  
+  .md-text-md {
+    font-size: var(--font-size-md);
+  }
+  
+  .md-text-lg {
+    font-size: var(--font-size-lg);
+  }
+  
+  .md-text-xl {
+    font-size: var(--font-size-xl);
+  }
+  
+  .md-text-2xl {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .md-text-3xl {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+/* Laptop (1024px+) */
+@media (min-width: 1024px) {
+  .lg-text-xs {
+    font-size: var(--font-size-xs);
+  }
+  
+  .lg-text-sm {
+    font-size: var(--font-size-sm);
+  }
+  
+  .lg-text-md {
+    font-size: var(--font-size-md);
+  }
+  
+  .lg-text-lg {
+    font-size: var(--font-size-lg);
+  }
+  
+  .lg-text-xl {
+    font-size: var(--font-size-xl);
+  }
+  
+  .lg-text-2xl {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .lg-text-3xl {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .lg-text-4xl {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+/* Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .xl-text-xs {
+    font-size: var(--font-size-xs);
+  }
+  
+  .xl-text-sm {
+    font-size: var(--font-size-sm);
+  }
+  
+  .xl-text-md {
+    font-size: var(--font-size-md);
+  }
+  
+  .xl-text-lg {
+    font-size: var(--font-size-lg);
+  }
+  
+  .xl-text-xl {
+    font-size: var(--font-size-xl);
+  }
+  
+  .xl-text-2xl {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .xl-text-3xl {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .xl-text-4xl {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .xl-text-5xl {
+    font-size: var(--font-size-5xl);
+  }
+}
+
+/* Line height adjustments for improved readability */
+.leading-tight {
+  line-height: 1.25;
+}
+
+.leading-normal {
+  line-height: 1.5;
+}
+
+.leading-loose {
+  line-height: 1.75;
+}
+
+/* Responsive text properties */
+.responsive-text {
+  font-size: clamp(0.875rem, 2vw, 1.25rem);
+}
+
+.responsive-heading {
+  font-size: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.responsive-subheading {
+  font-size: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+/* Helper classes for text flow and wrapping */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-wrap {
+  white-space: normal;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.text-break {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Font weight utility classes */
+.font-thin {
+  font-weight: 100;
+}
+
+.font-extralight {
+  font-weight: 200;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+.font-black {
+  font-weight: 900;
+}

@@ -1,0 +1,357 @@
+/* Media Queries
+ * This file centralizes all media query mixins for consistent responsive behavior
+ * Using standardized breakpoints:
+ * - xs: 320px  (Small mobile phones)
+ * - sm: 640px  (Large mobile phones)
+ * - md: 768px  (Tablets)
+ * - lg: 1024px (Laptops)
+ * - xl: 1440px (Desktops)
+ */
+
+/*
+ * Custom Media Queries Definition
+ * These follow a standardized pattern and can be included via @import in other files
+ */
+
+/* Mobile-first approach (min-width) */
+@custom-media --xs-min (min-width: 320px);
+@custom-media --sm-min (min-width: 640px);
+@custom-media --md-min (min-width: 768px);
+@custom-media --lg-min (min-width: 1024px);
+@custom-media --xl-min (min-width: 1440px);
+
+/* Desktop-first approach (max-width) */
+@custom-media --xs-max (max-width: 319px);
+@custom-media --sm-max (max-width: 639px);
+@custom-media --md-max (max-width: 767px);
+@custom-media --lg-max (max-width: 1023px);
+@custom-media --xl-max (max-width: 1439px);
+
+/* Specific range queries */
+@custom-media --xs-only (min-width: 320px) and (max-width: 639px);
+@custom-media --sm-only (min-width: 640px) and (max-width: 767px);
+@custom-media --md-only (min-width: 768px) and (max-width: 1023px);
+@custom-media --lg-only (min-width: 1024px) and (max-width: 1439px);
+
+/*
+ * Fallback Standard Media Queries
+ * Since custom media queries may require PostCSS, we provide standard versions
+ */
+
+/* 
+ * Mobile First Media Queries
+ * Use these for progressive enhancement - starting small and enhancing for larger screens
+ */
+
+/* Base styles should target mobile (no media query needed) */
+
+/* Small mobile devices (320px+) */
+.xs-up-visible {
+  display: none;
+}
+@media (min-width: 320px) {
+  .xs-up-visible {
+    display: block;
+  }
+  .xs-up-hidden {
+    display: none;
+  }
+}
+
+/* Medium mobile devices (640px+) */
+.sm-up-visible {
+  display: none;
+}
+@media (min-width: 640px) {
+  .sm-up-visible {
+    display: block;
+  }
+  .sm-up-hidden {
+    display: none;
+  }
+}
+
+/* Tablet devices (768px+) */
+.md-up-visible {
+  display: none;
+}
+@media (min-width: 768px) {
+  .md-up-visible {
+    display: block;
+  }
+  .md-up-hidden {
+    display: none;
+  }
+}
+
+/* Laptop devices (1024px+) */
+.lg-up-visible {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .lg-up-visible {
+    display: block;
+  }
+  .lg-up-hidden {
+    display: none;
+  }
+}
+
+/* Desktop devices (1440px+) */
+.xl-up-visible {
+  display: none;
+}
+@media (min-width: 1440px) {
+  .xl-up-visible {
+    display: block;
+  }
+  .xl-up-hidden {
+    display: none;
+  }
+}
+
+/*
+ * Desktop First Media Queries
+ * Use these for graceful degradation - starting with desktop and scaling down
+ */
+
+/* Everything except the smallest devices */
+.xs-down-visible {
+  display: block;
+}
+@media (max-width: 319px) {
+  .xs-down-visible {
+    display: none;
+  }
+  .xs-down-hidden {
+    display: block;
+  }
+}
+
+/* Small mobile devices and down */
+.sm-down-visible {
+  display: block;
+}
+@media (max-width: 639px) {
+  .sm-down-visible {
+    display: none;
+  }
+  .sm-down-hidden {
+    display: block;
+  }
+}
+
+/* Tablet devices and down */
+.md-down-visible {
+  display: block;
+}
+@media (max-width: 767px) {
+  .md-down-visible {
+    display: none;
+  }
+  .md-down-hidden {
+    display: block;
+  }
+}
+
+/* Laptop devices and down */
+.lg-down-visible {
+  display: block;
+}
+@media (max-width: 1023px) {
+  .lg-down-visible {
+    display: none;
+  }
+  .lg-down-hidden {
+    display: block;
+  }
+}
+
+/* Desktop devices and down */
+.xl-down-visible {
+  display: block;
+}
+@media (max-width: 1439px) {
+  .xl-down-visible {
+    display: none;
+  }
+  .xl-down-hidden {
+    display: block;
+  }
+}
+
+/* 
+ * Range Specific Media Queries
+ * Use these for targeting specific device size ranges 
+ */
+
+/* Small mobile only (320px-639px) */
+.xs-only-visible {
+  display: none;
+}
+@media (min-width: 320px) and (max-width: 639px) {
+  .xs-only-visible {
+    display: block;
+  }
+  .xs-only-hidden {
+    display: none;
+  }
+}
+
+/* Medium mobile only (640px-767px) */
+.sm-only-visible {
+  display: none;
+}
+@media (min-width: 640px) and (max-width: 767px) {
+  .sm-only-visible {
+    display: block;
+  }
+  .sm-only-hidden {
+    display: none;
+  }
+}
+
+/* Tablet only (768px-1023px) */
+.md-only-visible {
+  display: none;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .md-only-visible {
+    display: block;
+  }
+  .md-only-hidden {
+    display: none;
+  }
+}
+
+/* Laptop only (1024px-1439px) */
+.lg-only-visible {
+  display: none;
+}
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .lg-only-visible {
+    display: block;
+  }
+  .lg-only-hidden {
+    display: none;
+  }
+}
+
+/* Desktop only (1440px+) */
+.xl-only-visible {
+  display: none;
+}
+@media (min-width: 1440px) {
+  .xl-only-visible {
+    display: block;
+  }
+  .xl-only-hidden {
+    display: none;
+  }
+}
+
+/* 
+ * Special device-targeting classes 
+ */
+
+/* Print styles */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-visible {
+    display: block !important;
+  }
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-auto-enabled {
+    /* Dark mode styles that apply automatically based on system preference */
+    background-color: #121212;
+    color: #ffffff;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .high-contrast-auto {
+    /* High contrast styles */
+    border: 0.0625rem solid currentColor;
+  }
+}
+
+/* Orientation specific styles */
+@media (orientation: portrait) {
+  .portrait-only {
+    display: block;
+  }
+  
+  .landscape-only {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) {
+  .portrait-only {
+    display: none;
+  }
+  
+  .landscape-only {
+    display: block;
+  }
+}
+
+/* Pointer device detection */
+@media (pointer: fine) {
+  /* Styles for mouse or stylus */
+  .pointer-fine-only {
+    display: block;
+  }
+  
+  .pointer-coarse-only {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  /* Styles for touch interfaces */
+  .pointer-fine-only {
+    display: none;
+  }
+  
+  .pointer-coarse-only {
+    display: block;
+  }
+}
+
+/* Media query combinations for common scenarios */
+
+/* Small screens and touch devices */
+@media (max-width: 767px) and (pointer: coarse) {
+  .mobile-touch-only {
+    display: block;
+  }
+}
+
+/* Large screens with mouse */
+@media (min-width: 1024px) and (pointer: fine) {
+  .desktop-mouse-only {
+    display: block;
+  }
+}
+
+/* Helper class to show/hide content based on screen size */
+.responsive-visibility-classes {
+  /* Use the appropriate class from above for visibility control */
+  /* Example: class="md-up-visible sm-down-hidden" */
+}

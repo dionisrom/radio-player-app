@@ -10,28 +10,28 @@
 
 .skip-link {
     position: absolute;
-    top: -50px;
-    left: 8px;
+    top: -3.125rem; /* 50px to rem */
+    left: 0.5rem; /* 8px to rem */
     background: rgba(79, 70, 229, 0.9);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(0.75rem); /* 12px to rem */
     color: white;
-    padding: 12px 20px;
+    padding: 0.75rem 1.25rem; /* 12px 20px to rem */
     text-decoration: none;
-    border-radius: 12px;
-    font-size: 14px;
+    border-radius: 0.75rem; /* 12px to rem */
+    font-size: var(--font-size-sm); /* 14px to rem using variable */
     font-weight: 600;
     z-index: 1001;
     transform: translateY(-100%);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.2); /* 1px to rem */
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1); /* 8px 32px to rem */
 }
 
 .skip-link:focus {
     transform: translateY(0);
-    outline: 2px solid #FBBF24;
-    outline-offset: 2px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    outline: 0.125rem solid #FBBF24; /* 2px to rem */
+    outline-offset: 0.125rem; /* 2px to rem */
+    box-shadow: 0 0.75rem 2.5rem rgba(0, 0, 0, 0.15); /* 12px 40px to rem */
 }
 
 .dark .skip-link {
@@ -86,7 +86,7 @@ body::before {
     75% { transform: translateY(-10px) rotate(-0.5deg) scale(0.99); opacity: 0.95; }
 }
 
-/* Enhanced Main Container Glassmorphism */
+/* Enhanced Main Container Glassmorphism with CSS Grid */
 .w-full.max-w-4xl.mx-auto {
     background: rgba(255, 255, 255, 0.25) !important;
     backdrop-filter: blur(40px) !important;
@@ -98,7 +98,7 @@ body::before {
         inset 0 1px 0 rgba(255, 255, 255, 0.4),
         inset 0 -1px 0 rgba(0, 0, 0, 0.05) !important;
     border-radius: 32px !important;
-    padding: 3rem !important;
+    padding: 0 !important;
     margin: 5vh auto !important;
     position: relative;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -108,19 +108,115 @@ body::before {
     min-height: auto !important;
     max-height: none !important;
     overflow: hidden !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto 1fr !important;
 }
 
-/* Responsive adjustments for better viewport fit */
+/* Responsive adjustments for better viewport fit - Standard Breakpoints */
 @media (min-width: 768px) {
     .w-full.max-w-4xl.mx-auto {
         width: 87vw !important;
         height: 87vh !important;
-        padding: 4rem !important;
+        padding: 2rem !important;
         margin: 5vh auto !important;
     }
+}
 
-/* Mobile viewport and body setup */
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
+    .w-full.max-w-4xl.mx-auto {
+        width: 85vw !important;
+        height: 85vh !important;
+        padding: 3rem !important;
+        margin: 6vh auto !important;
+        border-radius: 36px !important;
+    }
+}
+
+@media (min-width: 1440px) {
+    .w-full.max-w-4xl.mx-auto {
+        width: 75vw !important;
+        max-width: 1600px !important;
+        height: 80vh !important;
+        padding: 4rem !important;
+        margin: 8vh auto !important;
+        border-radius: 40px !important;
+    }
+}
+
+/* Mobile viewport and body setup - Mobile First (320px+) */
+/* Small mobile devices (320px - 639px) */
+@media (max-width: 639px) {
+    body {
+        height: 100vh !important;
+        height: 100dvh !important; /* Use dvh for better mobile support */
+        overflow: hidden !important;
+        padding: 0.25rem !important;
+    }
+    
+    .w-full.max-w-4xl.mx-auto {
+        padding: 0.5rem !important;
+        margin: 0 auto !important;
+        width: calc(100vw - 0.5rem) !important;
+        height: calc(100vh - 0.5rem) !important;
+        height: calc(100dvh - 0.5rem) !important; /* Use dvh for better mobile support */
+        border-radius: 20px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        max-height: calc(100vh - 0.5rem) !important;
+        max-height: calc(100dvh - 0.5rem) !important;
+        overflow: hidden !important;
+        position: relative !important;
+    }
+    
+    /* Mobile: Player section should be visible at top */
+    [class*="flex-col-reverse"][class*="md:flex-row"] {
+        flex-direction: column !important;
+        height: 100% !important;
+        overflow: hidden !important;
+        position: relative !important;
+    }
+    
+    /* Mobile: Player section styling - ENSURE VISIBILITY */
+    [class*="md:w-2/3"] {
+        height: 40vh !important;
+        min-height: 280px !important;
+        max-height: 40vh !important;
+        padding: 0.5rem !important;
+        flex-shrink: 0 !important;
+        order: -1 !important; /* Force to top */
+        overflow-y: auto !important;
+        box-sizing: border-box !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(8px) !important;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+        position: relative !important;
+        z-index: 100 !important; /* Ensure it's on top */
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* Mobile: Station list styling - BELOW PLAYER */
+    [class*="md:w-1/3"] {
+        height: calc(60vh - 1rem) !important;
+        flex: 1 !important;
+        min-height: 200px !important;
+        order: 1 !important; /* Below player */
+        border-top: none !important;
+        border-right: none !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+}
+
+/* Medium/tablet devices (640px - 767px) */
+@media (min-width: 640px) and (max-width: 767px) {
     body {
         height: 100vh !important;
         height: 100dvh !important; /* Use dvh for better mobile support */
@@ -189,37 +285,56 @@ body::before {
     }
 }
 
-@media (max-width: 480px) {
-    body {
-        padding: 0.25rem !important;
+/* Tablet Devices (640px - 767px) */
+@media (min-width: 640px) and (max-width: 767px) {
+    /* Mobile: Player section should be visible at top */
+    [class*="flex-col-reverse"][class*="md:flex-row"] {
+        flex-direction: column !important;
+        height: 100% !important;
+        overflow: hidden !important;
+        position: relative !important;
     }
     
-    .w-full.max-w-4xl.mx-auto {
-        padding: 0.75rem !important;
-        margin: 0 auto !important;
-        width: calc(100vw - 0.5rem) !important;
-        height: calc(100vh - 0.5rem) !important;
-        height: calc(100dvh - 0.5rem) !important;
-        border-radius: 20px !important;
-        max-height: calc(100vh - 0.5rem) !important;
-        max-height: calc(100dvh - 0.5rem) !important;
-    }
-    
-    /* Small mobile: Player section */
+    /* Mobile: Player section styling - ENSURE VISIBILITY */
     [class*="md:w-2/3"] {
-        height: 40vh !important;
-        min-height: 280px !important;
-        max-height: 40vh !important;
-        padding: 0.5rem !important;
+        height: 45vh !important;
+        min-height: 320px !important;
+        max-height: 45vh !important;
+        padding: 0.75rem !important;
+        flex-shrink: 0 !important;
+        order: -1 !important; /* Force to top */
         overflow-y: auto !important;
+        box-sizing: border-box !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(8px) !important;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+        position: relative !important;
+        z-index: 100 !important; /* Ensure it's on top */
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
     }
     
-    /* Small mobile: Station list */
+    /* Mobile: Station list styling - BELOW PLAYER */
     [class*="md:w-1/3"] {
-        height: calc(60vh - 1rem) !important;
-        min-height: 250px !important;
+        height: calc(55vh - 1rem) !important;
+        flex: 1 !important;
+        min-height: 200px !important;
+        order: 1 !important; /* Below player */
+        border-top: none !important;
+        border-right: none !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        position: relative !important;
+        z-index: 10 !important;
     }
-    
+}
+
+/* Extra small mobile devices (320px - 479px) - Additional specific styles */
+@media (max-width: 479px) {
     /* Small mobile: More compact header */
     aside header {
         padding: 0.75rem !important;
@@ -327,9 +442,10 @@ body::before {
 
 /* Enhanced Station List Scrollable Area */
 .overflow-y-auto {
-    max-height: none !important;
+    max-height: 100% !important; /* Allow proper scrolling */
     min-height: 350px !important;
     padding: 1rem !important;
+    overflow-y: auto !important; /* Enforce scrolling */
 }
 
 @media (min-width: 768px) {
@@ -389,6 +505,75 @@ body::before {
     padding: 20px 24px !important;
     border-radius: 16px !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced Station Image Styles */
+.station-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.station-item:hover .station-image-wrapper {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.2);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.station-item.active .station-image-wrapper {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+}
+
+.dark .station-image-wrapper {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .station-item:hover .station-image-wrapper {
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.dark .station-item.active .station-image-wrapper {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive image sizes */
+@media (max-width: 640px) {
+    .station-image-wrapper {
+        width: 10px !important;
+        height: 10px !important;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+    .station-image-wrapper {
+        width: 10px !important;
+        height: 10px !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .station-image-wrapper {
+        width: 12px !important;
+        height: 12px !important;
+    }
+}
+
+/* Search result station images */
+.station-search-image {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
 /* Enhanced Station Item Base */
@@ -533,7 +718,8 @@ input:focus {
 /* Enhanced Visualizer Container with Premium Glassmorphism */
 #visualizer-container {
     height: 160px;
-    width: 100%;
+    width: 100%;    /* Maintain width 100% */
+    max-width: 100%; /* Ensure it doesn't exceed parent width */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1602,7 +1788,6 @@ select#eq-preset option {
         max-height: none !important;
         padding: 2rem !important;
     }
-}
     
     [class*="md:w-2/3"] {
         height: 100% !important;
@@ -1848,7 +2033,7 @@ select#eq-preset {
     border-radius: 6px !important;
     padding: 2px 6px !important;
     font-weight: 500 !important;
-    font-size: 10px !important;
+    font-size: var(--font-size-tiny) !important; /* 10px to rem using variable */
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
 }
@@ -1910,7 +2095,27 @@ select#eq-preset {
     /* Mobile: Ensure proper touch targets and spacing */
     .station-item {
         padding: 0.75rem !important;
-        min-height: 60px !important;
+        min-height: 70px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    /* Mobile: Station item image sizing */
+    .station-item .station-image-wrapper {
+        width: 40px !important;
+        height: 40px !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* Mobile: Station text handling */
+    .station-item .font-medium {
+        font-size: 0.95rem !important;
+        line-height: 1.3 !important;
+    }
+    
+    .station-item .text-sm {
+        font-size: 0.8rem !important;
+        line-height: 1.2 !important;
     }
     
     /* Mobile: Player section text scaling */
@@ -1930,6 +2135,7 @@ select#eq-preset {
         max-height: 180px !important;
         margin-bottom: 1rem !important;
         width: 100% !important;
+        max-width: 100% !important; /* Ensure it doesn't exceed parent width */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -1948,6 +2154,8 @@ select#eq-preset {
     #visualizer-container {
         max-height: 120px !important;
         height: 120px !important;
+        width: 100% !important;
+        max-width: 100% !important;
         margin-bottom: 0.5rem !important;
         width: 100% !important;
         display: flex !important;
@@ -1966,12 +2174,6 @@ select#eq-preset {
     
     #now-playing-title {
         font-size: 0.875rem !important;
-        margin-top: 0.25rem !important;
-        margin-bottom: 0.25rem !important;
-    }
-    
-    #info-quality {
-        font-size: 0.75rem !important;
         margin-top: 0.25rem !important;
         margin-bottom: 0.25rem !important;
     }
@@ -2004,10 +2206,6 @@ select#eq-preset {
         font-size: 0.65rem !important;
         opacity: 0.5 !important;
         margin-top: 0.25rem !important;
-    }
-    
-    #performance-stats {
-        display: none !important;
     }
     
     /* Mobile: Ensure station list is scrollable */

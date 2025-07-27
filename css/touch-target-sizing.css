@@ -1,0 +1,219 @@
+/* Touch Target Sizing
+ * This file enhances touch target sizes for better mobile interaction
+ * Following the standard recommendation of at least 44×44px for touch targets
+ */
+
+:root {
+  /* Touch target variables */
+  --touch-target-min: 2.75rem;  /* 44px at 16px base font size */
+  --touch-target-optimal: 3rem; /* 48px - slightly larger for better usability */
+  --touch-target-spacing: 0.5rem; /* 8px minimum space between touch targets */
+
+  /* Define padding for different types of interactive elements */
+  --button-padding-mobile: 0.75rem 1rem;  /* 12px 16px */
+  --button-padding-desktop: 0.625rem 1.25rem; /* 10px 20px */
+  --icon-button-padding-mobile: 0.75rem;  /* 12px */
+  --icon-button-padding-desktop: 0.625rem; /* 10px */
+}
+
+/* Base touch target enhancement */
+.touch-target {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Enhanced buttons for touch */
+button.touch-enhanced,
+.button.touch-enhanced,
+[role="button"].touch-enhanced,
+input[type="button"].touch-enhanced,
+input[type="submit"].touch-enhanced,
+input[type="reset"].touch-enhanced {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  padding: var(--button-padding-mobile);
+  touch-action: manipulation;
+}
+
+/* Icon buttons (square format) */
+button.icon-button,
+.button.icon-button,
+[role="button"].icon-button {
+  width: var(--touch-target-optimal);
+  height: var(--touch-target-optimal);
+  padding: var(--icon-button-padding-mobile);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+/* Ensure adequate spacing between touch targets */
+.touch-spacing > * + * {
+  margin-left: var(--touch-target-spacing);
+}
+
+.touch-spacing-vertical > * + * {
+  margin-top: var(--touch-target-spacing);
+}
+
+/* Make form elements touch-friendly */
+input[type="checkbox"].touch-enhanced,
+input[type="radio"].touch-enhanced {
+  min-width: 1.5rem; /* 24px */
+  min-height: 1.5rem; /* 24px */
+  margin: 0.625rem; /* 10px padding around the actual control */
+}
+
+/* Specific override for small icon buttons to ensure they're touchable */
+.small-icon-button {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem; /* 10px */
+  position: relative;
+}
+
+/* Create a larger invisible touch area for very small visual elements */
+.touch-target-helper {
+  position: relative;
+}
+
+.touch-target-helper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  /* Invisible but touchable */
+  background-color: transparent;
+  z-index: 1;
+}
+
+/* Media query for devices with coarse pointer (touch screens) */
+@media (pointer: coarse) {
+  /* Increase general target sizes */
+  button,
+  .button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    padding: var(--button-padding-mobile);
+    touch-action: manipulation;
+  }
+  
+  /* Increase list item touch targets */
+  .station-item {
+    min-height: var(--touch-target-optimal);
+    padding-top: 0.75rem;    /* 12px */
+    padding-bottom: 0.75rem; /* 12px */
+  }
+  
+  /* Ensure controls have space between them */
+  .audio-player-grid {
+    gap: 0.75rem !important; /* 12px - increased from original */
+  }
+  
+  /* Improve form control touchability */
+  input[type="range"] {
+    height: 1.5rem !important; /* 24px touch area */
+  }
+  
+  /* Better tap targets for links in navigation */
+  nav a, 
+  aside a {
+    display: inline-block;
+    min-height: var(--touch-target-min);
+    line-height: var(--touch-target-min);
+  }
+  
+  /* More spacing for search controls */
+  input[type="search"] {
+    min-height: var(--touch-target-min);
+    line-height: 1.5;
+    padding: 0.625rem 0.75rem;
+  }
+}
+
+/* Desktop refinements */
+@media (pointer: fine) {
+  button.touch-enhanced,
+  .button.touch-enhanced,
+  [role="button"].touch-enhanced {
+    padding: var(--button-padding-desktop);
+  }
+  
+  button.icon-button,
+  .button.icon-button,
+  [role="button"].icon-button {
+    padding: var(--icon-button-padding-desktop);
+  }
+}
+
+/* Play/Pause and Mute buttons specific sizing */
+#play-pause-btn,
+#mute-btn {
+  min-width: var(--touch-target-optimal);
+  min-height: var(--touch-target-optimal);
+  padding: 0.75rem !important; /* 12px */
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Station item favorite button */
+.favorite-btn {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Drag handle touch improvement */
+.drag-handle {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: grab;
+}
+
+/* Additional spacing for volume controls */
+.volume-grid {
+  min-height: var(--touch-target-min);
+}
+
+.volume-grid i {
+  min-width: 1.5rem; /* 24px */
+  min-height: 1.5rem; /* 24px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Header buttons touch improvement */
+header [role="group"] button {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Ensure clickable station items have proper sizing */
+.station-item [role="button"] {
+  min-height: var(--touch-target-min);
+}

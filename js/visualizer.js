@@ -82,22 +82,75 @@ export function setupVisualization(vizType, analyser) {
     console.log('2D Canvas visualization ready for type:', vizType);
 }
 
+// Optimize animation loop with throttling and better error handling
+let animationFrameId = null;
+let lastAnimationTime = 0;
+let animationThrottleInterval = 1000 / 60; // Default to 60fps
+let errorCount = 0;
+const MAX_ERROR_COUNT = 5;
+
 export function animate(analyser, currentViz, isPlaying) {
     if (!visualizerInitialized || !canvasVisualizer) {
         return;
     }
 
-    // Continue the animation loop
-    requestAnimationFrame(() => animate(analyser, currentViz, isPlaying));
-
-    try {
-        canvasVisualizer.animate(analyser, currentViz, isPlaying);
-    } catch (error) {
-        console.error('Animation error:', error);
-        if (errorCallback) {
-            errorCallback('Visualization animation failed', error);
-        }
+    // Cancel any existing animation frame to prevent duplicate loops
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
     }
+
+    // Schedule next frame
+    animationFrameId = requestAnimationFrame(() => {
+        const now = performance.now();
+        const elapsed = now - lastAnimationTime;
+        
+        // Get device capabilities to adjust throttling
+        const isMobile = window.innerWidth <= 768;
+        
+        // Set different frame rates for different devices
+        if (isMobile) {
+            animationThrottleInterval = 1000 / 30; // 30fps target for mobile
+        } else {
+            // Use device refresh rate if available, otherwise default to 60fps
+            const refreshRate = window.screen.refreshRate || 60;
+            animationThrottleInterval = 1000 / refreshRate;
+        }
+        
+        // Only render if enough time has passed or first frame
+        if (elapsed >= animationThrottleInterval || lastAnimationTime === 0) {
+            lastAnimationTime = now;
+            
+            try {
+                // Record frame for performance monitoring
+                if (typeof window.recordFrame === 'function') {
+                    window.recordFrame();
+                }
+                
+                canvasVisualizer.animate(analyser, currentViz, isPlaying);
+                
+                // Reset error counter on successful render
+                errorCount = 0;
+            } catch (error) {
+                errorCount++;
+                console.error(`Animation error (${errorCount}/${MAX_ERROR_COUNT}):`, error);
+                
+                if (errorCount >= MAX_ERROR_COUNT) {
+                    console.warn('Too many animation errors, stopping animation loop');
+                    if (errorCallback) {
+                        errorCallback('Visualization animation failed repeatedly, stopping', error);
+                    }
+                    return; // Stop animation loop after too many errors
+                }
+                
+                if (errorCallback) {
+                    errorCallback('Visualization animation error', error);
+                }
+            }
+        }
+        
+        // Continue the animation loop if still playing
+        animate(analyser, currentViz, isPlaying);
+    });
 }
 
 export function showInitialIcon(container) {
@@ -145,17 +198,34 @@ export function resizeVisualizer() {
 
 export function destroyVisualizer() {
     try {
+        // Cancel any pending animation frames
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+        
+        // Reset animation timers
+        lastAnimationTime = 0;
+        errorCount = 0;
+        
+        // Destroy canvas visualizer
         if (canvasVisualizer) {
             canvasVisualizer.destroy();
             canvasVisualizer = null;
         }
         
+        // Reset state
         visualizerInitialized = false;
         currentContainer = null;
         
-        console.log('2D Canvas visualizer destroyed');
+        console.log('2D Canvas visualizer destroyed and animation loop stopped');
         
     } catch (error) {
         console.error('Error destroying visualizer:', error);
+        
+        // Force cleanup even if there was an error
+        canvasVisualizer = null;
+        visualizerInitialized = false;
+        animationFrameId = null;
     }
 }

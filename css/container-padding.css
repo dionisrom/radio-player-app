@@ -1,0 +1,408 @@
+/* Container Padding System
+ * This file centralizes padding definitions for consistent spacing across components
+ * Based on our standardized breakpoints:
+ * - xs: 320px  (Small mobile phones)
+ * - sm: 640px  (Large mobile phones)
+ * - md: 768px  (Tablets)
+ * - lg: 1024px (Laptops)
+ * - xl: 1440px (Desktops)
+ */
+
+:root {
+  /* Base Container Padding - Mobile First */
+  --container-padding-xs: 0.5rem;   /* 8px */
+  --container-padding-sm: 0.75rem;  /* 12px */
+  --container-padding-md: 1.25rem;  /* 20px */
+  --container-padding-lg: 2rem;     /* 32px */
+  --container-padding-xl: 3rem;     /* 48px */
+
+  /* Inner Component Padding - Mobile First */
+  --component-padding-xs: 0.375rem; /* 6px */
+  --component-padding-sm: 0.625rem; /* 10px */
+  --component-padding-md: 1rem;     /* 16px */
+  --component-padding-lg: 1.5rem;   /* 24px */
+  --component-padding-xl: 2rem;     /* 32px */
+
+  /* Element Padding - Mobile First */
+  --element-padding-xs: 0.25rem;    /* 4px */
+  --element-padding-sm: 0.5rem;     /* 8px */
+  --element-padding-md: 0.75rem;    /* 12px */
+  --element-padding-lg: 1rem;       /* 16px */
+  --element-padding-xl: 1.5rem;     /* 24px */
+}
+
+/* Container padding classes - Mobile First (320px base) */
+.container-padding {
+  padding: var(--container-padding-xs);
+}
+
+.container-padding-x {
+  padding-left: var(--container-padding-xs);
+  padding-right: var(--container-padding-xs);
+}
+
+.container-padding-y {
+  padding-top: var(--container-padding-xs);
+  padding-bottom: var(--container-padding-xs);
+}
+
+.component-padding {
+  padding: var(--component-padding-xs);
+}
+
+.component-padding-x {
+  padding-left: var(--component-padding-xs);
+  padding-right: var(--component-padding-xs);
+}
+
+.component-padding-y {
+  padding-top: var(--component-padding-xs);
+  padding-bottom: var(--component-padding-xs);
+}
+
+.element-padding {
+  padding: var(--element-padding-xs);
+}
+
+.element-padding-x {
+  padding-left: var(--element-padding-xs);
+  padding-right: var(--element-padding-xs);
+}
+
+.element-padding-y {
+  padding-top: var(--element-padding-xs);
+  padding-bottom: var(--element-padding-xs);
+}
+
+/* Medium mobile (640px+) */
+@media (min-width: 640px) {
+  .container-padding {
+    padding: var(--container-padding-sm);
+  }
+  
+  .container-padding-x {
+    padding-left: var(--container-padding-sm);
+    padding-right: var(--container-padding-sm);
+  }
+  
+  .container-padding-y {
+    padding-top: var(--container-padding-sm);
+    padding-bottom: var(--container-padding-sm);
+  }
+  
+  .component-padding {
+    padding: var(--component-padding-sm);
+  }
+  
+  .component-padding-x {
+    padding-left: var(--component-padding-sm);
+    padding-right: var(--component-padding-sm);
+  }
+  
+  .component-padding-y {
+    padding-top: var(--component-padding-sm);
+    padding-bottom: var(--component-padding-sm);
+  }
+  
+  .element-padding {
+    padding: var(--element-padding-sm);
+  }
+  
+  .element-padding-x {
+    padding-left: var(--element-padding-sm);
+    padding-right: var(--element-padding-sm);
+  }
+  
+  .element-padding-y {
+    padding-top: var(--element-padding-sm);
+    padding-bottom: var(--element-padding-sm);
+  }
+}
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .container-padding {
+    padding: var(--container-padding-md);
+  }
+  
+  .container-padding-x {
+    padding-left: var(--container-padding-md);
+    padding-right: var(--container-padding-md);
+  }
+  
+  .container-padding-y {
+    padding-top: var(--container-padding-md);
+    padding-bottom: var(--container-padding-md);
+  }
+  
+  .component-padding {
+    padding: var(--component-padding-md);
+  }
+  
+  .component-padding-x {
+    padding-left: var(--component-padding-md);
+    padding-right: var(--component-padding-md);
+  }
+  
+  .component-padding-y {
+    padding-top: var(--component-padding-md);
+    padding-bottom: var(--component-padding-md);
+  }
+  
+  .element-padding {
+    padding: var(--element-padding-md);
+  }
+  
+  .element-padding-x {
+    padding-left: var(--element-padding-md);
+    padding-right: var(--element-padding-md);
+  }
+  
+  .element-padding-y {
+    padding-top: var(--element-padding-md);
+    padding-bottom: var(--element-padding-md);
+  }
+}
+
+/* Laptop (1024px+) */
+@media (min-width: 1024px) {
+  .container-padding {
+    padding: var(--container-padding-lg);
+  }
+  
+  .container-padding-x {
+    padding-left: var(--container-padding-lg);
+    padding-right: var(--container-padding-lg);
+  }
+  
+  .container-padding-y {
+    padding-top: var(--container-padding-lg);
+    padding-bottom: var(--container-padding-lg);
+  }
+  
+  .component-padding {
+    padding: var(--component-padding-lg);
+  }
+  
+  .component-padding-x {
+    padding-left: var(--component-padding-lg);
+    padding-right: var(--component-padding-lg);
+  }
+  
+  .component-padding-y {
+    padding-top: var(--component-padding-lg);
+    padding-bottom: var(--component-padding-lg);
+  }
+  
+  .element-padding {
+    padding: var(--element-padding-lg);
+  }
+  
+  .element-padding-x {
+    padding-left: var(--element-padding-lg);
+    padding-right: var(--element-padding-lg);
+  }
+  
+  .element-padding-y {
+    padding-top: var(--element-padding-lg);
+    padding-bottom: var(--element-padding-lg);
+  }
+}
+
+/* Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .container-padding {
+    padding: var(--container-padding-xl);
+  }
+  
+  .container-padding-x {
+    padding-left: var(--container-padding-xl);
+    padding-right: var(--container-padding-xl);
+  }
+  
+  .container-padding-y {
+    padding-top: var(--container-padding-xl);
+    padding-bottom: var(--container-padding-xl);
+  }
+  
+  .component-padding {
+    padding: var(--component-padding-xl);
+  }
+  
+  .component-padding-x {
+    padding-left: var(--component-padding-xl);
+    padding-right: var(--component-padding-xl);
+  }
+  
+  .component-padding-y {
+    padding-top: var(--component-padding-xl);
+    padding-bottom: var(--component-padding-xl);
+  }
+  
+  .element-padding {
+    padding: var(--element-padding-xl);
+  }
+  
+  .element-padding-x {
+    padding-left: var(--element-padding-xl);
+    padding-right: var(--element-padding-xl);
+  }
+  
+  .element-padding-y {
+    padding-top: var(--element-padding-xl);
+    padding-bottom: var(--element-padding-xl);
+  }
+}
+
+/* Direction-specific padding utilities */
+.padding-top {
+  padding-top: var(--element-padding-xs);
+}
+
+.padding-right {
+  padding-right: var(--element-padding-xs);
+}
+
+.padding-bottom {
+  padding-bottom: var(--element-padding-xs);
+}
+
+.padding-left {
+  padding-left: var(--element-padding-xs);
+}
+
+/* Direction-specific padding utilities - Medium mobile (640px+) */
+@media (min-width: 640px) {
+  .padding-top {
+    padding-top: var(--element-padding-sm);
+  }
+  
+  .padding-right {
+    padding-right: var(--element-padding-sm);
+  }
+  
+  .padding-bottom {
+    padding-bottom: var(--element-padding-sm);
+  }
+  
+  .padding-left {
+    padding-left: var(--element-padding-sm);
+  }
+}
+
+/* Direction-specific padding utilities - Tablet (768px+) */
+@media (min-width: 768px) {
+  .padding-top {
+    padding-top: var(--element-padding-md);
+  }
+  
+  .padding-right {
+    padding-right: var(--element-padding-md);
+  }
+  
+  .padding-bottom {
+    padding-bottom: var(--element-padding-md);
+  }
+  
+  .padding-left {
+    padding-left: var(--element-padding-md);
+  }
+}
+
+/* Direction-specific padding utilities - Laptop (1024px+) */
+@media (min-width: 1024px) {
+  .padding-top {
+    padding-top: var(--element-padding-lg);
+  }
+  
+  .padding-right {
+    padding-right: var(--element-padding-lg);
+  }
+  
+  .padding-bottom {
+    padding-bottom: var(--element-padding-lg);
+  }
+  
+  .padding-left {
+    padding-left: var(--element-padding-lg);
+  }
+}
+
+/* Direction-specific padding utilities - Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .padding-top {
+    padding-top: var(--element-padding-xl);
+  }
+  
+  .padding-right {
+    padding-right: var(--element-padding-xl);
+  }
+  
+  .padding-bottom {
+    padding-bottom: var(--element-padding-xl);
+  }
+  
+  .padding-left {
+    padding-left: var(--element-padding-xl);
+  }
+}
+
+/* Proportional Container Padding
+ * These classes scale padding proportionally to viewport size
+ * using viewport units (vw) with min and max constraints
+ */
+.container-padding-proportional {
+  padding: clamp(0.5rem, 2vw, 3rem);
+}
+
+.container-padding-x-proportional {
+  padding-left: clamp(0.5rem, 3vw, 3rem);
+  padding-right: clamp(0.5rem, 3vw, 3rem);
+}
+
+.container-padding-y-proportional {
+  padding-top: clamp(0.5rem, 2vw, 2.5rem);
+  padding-bottom: clamp(0.5rem, 2vw, 2.5rem);
+}
+
+.component-padding-proportional {
+  padding: clamp(0.375rem, 1.5vw, 2rem);
+}
+
+.component-padding-x-proportional {
+  padding-left: clamp(0.375rem, 2vw, 2rem);
+  padding-right: clamp(0.375rem, 2vw, 2rem);
+}
+
+.component-padding-y-proportional {
+  padding-top: clamp(0.375rem, 1.5vw, 1.5rem);
+  padding-bottom: clamp(0.375rem, 1.5vw, 1.5rem);
+}
+
+/* Container margin classes that respond to viewport size */
+.container-margin {
+  margin: clamp(0.5rem, 2vw, 3rem);
+}
+
+.container-margin-x {
+  margin-left: clamp(0.5rem, 3vw, 3rem);
+  margin-right: clamp(0.5rem, 3vw, 3rem);
+}
+
+.container-margin-y {
+  margin-top: clamp(0.5rem, 2vw, 2.5rem);
+  margin-bottom: clamp(0.5rem, 2vw, 2.5rem);
+}
+
+/* Dynamic spacing utilities */
+.gap-proportional {
+  gap: clamp(0.5rem, 1.5vw, 2rem);
+}
+
+.gap-x-proportional {
+  column-gap: clamp(0.5rem, 2vw, 2rem);
+}
+
+.gap-y-proportional {
+  row-gap: clamp(0.5rem, 1.5vw, 1.5rem);
+}

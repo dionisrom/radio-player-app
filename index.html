@@ -11,22 +11,46 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="32x32" href="/favicon-32x32.png">
     
-    <!-- Tailwind CSS -->
+    <!-- Optimized Tailwind CSS -->
+    <link rel="stylesheet" href="css/tailwind-optimized.css">
+    <!-- Tailwind CDN for development (comment out in production) -->
+    <!-- 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
         }
     </script>
+    -->
     
     <!-- External Stylesheets -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/breakpoints.css">
+    <link rel="stylesheet" href="css/container-padding.css">
+    <link rel="stylesheet" href="css/font-size-units.css">
+    <link rel="stylesheet" href="css/media-queries.css">
+    <link rel="stylesheet" href="css/touch-target-sizing.css">
+    <link rel="stylesheet" href="css/mobile-navigation.css">
+    <link rel="stylesheet" href="css/text-scaling.css">
+    <link rel="stylesheet" href="css/vertical-spacing.css">
+    <link rel="stylesheet" href="css/bottom-controls.css">
+    <link rel="stylesheet" href="css/mobile-first-layout.css">
+    <link rel="stylesheet" href="css/desktop-ui.css">
+    <link rel="stylesheet" href="css/station-browsing.css">
+    <link rel="stylesheet" href="css/desktop-space-utilization.css">
+    <link rel="stylesheet" href="css/visual-feedback.css">
+    <link rel="stylesheet" href="css/loading-states.css">
+    <link rel="stylesheet" href="css/animation-performance.css">
+    <link rel="stylesheet" href="css/toggle-fix.css">
+    <link rel="stylesheet" href="css/station-list-fix.css">
+    <link rel="stylesheet" href="css/player-controls-fix.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/grid-styles.css">
     
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="icecast-metadata-player-1.17.12.main.min.js"></script>
+    <script src="./js/player/icecast-metadata-player-1.17.12.main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <!-- Theme initialization -->
@@ -39,7 +63,7 @@
         }
     </script>
 </head>
-<body class="bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200 dark:from-indigo-900/80 dark:via-purple-900/80 dark:to-slate-900 text-slate-800 dark:text-slate-200 flex items-center justify-center min-h-screen p-4 transition-colors duration-300">
+<body class="bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200 dark:from-indigo-900/80 dark:via-purple-900/80 dark:to-slate-900 text-slate-800 dark:text-slate-200 min-h-screen container-padding-proportional transition-colors duration-300 has-bottom-controls">
 
     <!-- Skip Navigation Links -->
     <nav class="skip-navigation" aria-label="Skip navigation">
@@ -48,77 +72,93 @@
         <a href="#audio-player" class="skip-link">Skip to audio player</a>
     </nav>
 
-    <div class="w-full max-w-4xl mx-auto bg-white/30 dark:bg-slate-800/50 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden flex flex-col-reverse md:flex-row transition-colors duration-300 h-full md:h-[600px]" role="main" aria-label="Web Radio Player Application">
+    <!-- Mobile-First Header -->
+    <header class="mobile-header bg-white/30 dark:bg-slate-800/50 mobile-only">
+        <h1 class="fluid-text-lg font-bold">Hi-Fi Radio</h1>
+        <div class="flex items-center gap-3">
+            <button id="mobile-search-toggle" class="mobile-action-btn text-slate-600 dark:text-slate-300" aria-label="Toggle search">
+                <i class="fas fa-search"></i>
+            </button>
+            <button id="mobile-stations-toggle" class="mobile-action-btn text-slate-600 dark:text-slate-300" aria-label="Toggle stations">
+                <i class="fas fa-list"></i>
+            </button>
+            <button id="mobile-theme-toggle" class="mobile-action-btn text-slate-600 dark:text-slate-300 relative" aria-label="Toggle theme">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon hidden"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-first-container">
+        <div class="w-full max-w-4xl mx-auto bg-white/30 dark:bg-slate-800/50 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden main-grid transition-colors duration-300 h-full md:h-[600px] container-margin-proportional use-bottom-controls mobile-first-grid" role="main" aria-label="Web Radio Player Application">
 
         <!-- Station List -->
-        <aside id="radio-list" class="w-full md:w-1/3 bg-white/20 dark:bg-slate-900/30 border-t md:border-t-0 md:border-r border-white/20 dark:border-slate-700/50 flex flex-col transition-colors duration-300" aria-label="Radio Station List" role="complementary">
-            <header class="p-4 border-b border-white/20 dark:border-slate-700/50 flex items-center justify-between flex-wrap gap-2" role="banner">
-                <h1 class="text-xl font-bold text-slate-700 dark:text-slate-200 flex-shrink-0">Hi-Fi Radio</h1>
-                <div id="keyboard-help" class="text-xs text-slate-500 dark:text-slate-400 mt-2 opacity-75">
+        <aside id="radio-list" class="order-last-mobile md-order-1 stations-grid bg-white/20 dark:bg-slate-900/30 border-t md:border-t-0 md:border-r border-white/20 dark:border-slate-700/50 component-padding-proportional transition-colors duration-300" aria-label="Radio Station List" role="complementary">
+            <header class="element-padding-proportional border-b border-white/20 dark:border-slate-700/50 grid grid-cols-[auto_1fr_auto] items-center gap-4" role="banner">
+                <h1 class="fluid-text-xl font-bold text-slate-700 dark:text-slate-200 prevent-text-overflow">Hi-Fi Radio</h1>
+                <div id="keyboard-help" class="text-xs text-slate-500 dark:text-slate-400 opacity-75 text-center prevent-text-overflow">
                     Press ? for keyboard shortcuts
                 </div>
-                <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Application controls">
-                    <button id="compatibility-filter" title="Show only compatible stations" class="text-slate-500 hover:text-green-600 dark:hover:text-green-400 transition-colors flex-shrink-0 p-1" aria-label="Filter by compatibility" role="button">
+                <div class="grid grid-auto-flow-col gap-2 touch-spacing-x-md" role="group" aria-label="Application controls">
+                    <button id="compatibility-filter" title="Show only compatible stations" class="text-slate-500 hover:text-green-600 dark:hover:text-green-400 transition-colors icon-button" aria-label="Filter by compatibility" role="button">
                         <i class="fas fa-check-circle" aria-hidden="true"></i>
                     </button>
-                    <button id="theme-toggle" title="Toggle between light and dark theme" class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex-shrink-0 p-1" aria-label="Toggle theme" role="button">
+                    <button id="theme-toggle" title="Toggle between light and dark theme" class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors icon-button relative" aria-label="Toggle theme" role="button">
                         <i class="fas fa-sun" aria-hidden="true"></i>
                         <i class="fas fa-moon hidden" aria-hidden="true"></i>
                     </button>
                 </div>
             </header>
-            <div class="p-2 border-b border-white/20 dark:border-slate-700/50">
+            <div class="element-padding-proportional border-b border-white/20 dark:border-slate-700/50">
                 <h2 class="sr-only">Search Radio Stations</h2>
                 <label for="search-input" class="sr-only">Search radio stations</label>
-                <input type="search" id="search-input" placeholder="Search stations... (Press ↓ for keyboard navigation)" class="w-full px-3 py-2 bg-white/50 dark:bg-slate-800/60 border border-slate-300/50 dark:border-slate-600/80 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-500 dark:placeholder-slate-400" aria-label="Search radio stations" role="searchbox" aria-describedby="search-help">
+                <input type="search" id="search-input" placeholder="Search stations... (Press ↓ for keyboard navigation)" class="w-full px-3 py-2 bg-white/50 dark:bg-slate-800/60 border border-slate-300/50 dark:border-slate-600/80 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-500 dark:placeholder-slate-400 touch-enhanced fluid-text-sm" aria-label="Search radio stations" role="searchbox" aria-describedby="search-help">
                 <div id="search-help" class="sr-only">Type to search radio stations by name or genre. Use arrow keys to navigate results.</div>
             </div>
-            <h2 class="sr-only">Available Radio Stations</h2>
-            <nav id="station-list" class="flex-1 overflow-y-auto custom-scrollbar" role="list" aria-label="Available radio stations" aria-describedby="station-list-help">
-                <!-- Stations will be populated by JavaScript -->
-            </nav>
-            <div id="station-list-help" class="sr-only">Use arrow keys to navigate, Enter or Space to play a station, F to favorite a station.</div>
+            <div id="station-list-container" class="h-full">
+                <h2 class="sr-only">Available Radio Stations</h2>
+                <nav id="station-list" class="overflow-y-auto custom-scrollbar touch-spacing-y-md" role="list" aria-label="Available radio stations" aria-describedby="station-list-help">
+                    <!-- Stations will be populated by JavaScript -->
+                </nav>
+                <div id="station-list-help" class="sr-only">Use arrow keys to navigate, Enter or Space to play a station, F to favorite a station.</div>
+            </div>
         </aside>
 
         <!-- Player Section -->
-        <main id="main-content" class="w-full md:w-2/3 p-6 sm:p-8 flex flex-col transition-all duration-500 bg-cover bg-center" role="region" aria-label="Radio Player">
+        <main id="main-content" class="order-first-mobile md-order-2 player-controls-grid component-padding-proportional transition-all duration-500 bg-cover bg-center" role="region" aria-label="Radio Player">
             <div class="sr-only">
                 <h2>Web Radio Player</h2>
                 <p>A modern web-based radio player with visual audio spectrum analyzer. Select a station from the list to start listening.</p>
             </div>
             
-            <div id="player-content" class="text-center flex items-center justify-center transition-opacity duration-500">
+            <div id="player-content" class="visualizer-controls-grid transition-opacity duration-500 section-spacing touch-spacing-y-lg">
                 <h3 class="sr-only">Audio Visualization</h3>
-                <div id="visualizer-container" aria-label="Audio visualization display" role="img" aria-live="polite" aria-describedby="visualizer-description">
+                <div id="visualizer-container" class="mx-auto w-full max-w-full" aria-label="Audio visualization display" role="img" aria-live="polite" aria-describedby="visualizer-description">
                     <!-- The icon or the visualizer will be placed here by JS -->
                 </div>
                 <div id="visualizer-description" class="sr-only">Visual audio spectrum analyzer showing the frequency and amplitude of the currently playing audio. The visualization changes in real-time with the music.</div>
-                <p id="info-quality" class="text-sm text-slate-500 dark:text-slate-400 mt-4" aria-live="polite" aria-label="Stream quality information"></p>
                 <div id="player-status" class="sr-only" role="status" aria-live="assertive" aria-atomic="true">
                     <!-- Status messages for screen readers -->
                 </div>
-                
-                <div id="performance-stats" class="text-xs text-slate-500 dark:text-slate-400 mt-2 opacity-50 hidden">
-                    <!-- Performance stats will be populated by JavaScript -->
-                </div>
             </div>
+            
             <!-- Custom Glassmorphism Audio Player UI -->
-            <div id="custom-audio-player" class="glass-player-container w-full max-w-xl mx-auto mt-8 mb-4 p-6 rounded-2xl shadow-xl backdrop-blur-2xl bg-white/30 dark:bg-slate-800/40 border border-white/20 dark:border-slate-700/40 flex flex-col items-center gap-6">
-                <div class="flex flex-col items-center flex-1 mx-4">
-                    <span id="info-name" class="font-semibold text-lg text-slate-800 dark:text-white truncate">Station Name</span>
-                    <span id="info-genre" class="text-sm text-slate-500 dark:text-slate-300 truncate">Genre</span>
+            <div id="custom-audio-player" class="glass-player-container w-full max-w-xl mx-auto component-padding-proportional rounded-2xl shadow-xl backdrop-blur-2xl bg-white/30 dark:bg-slate-800/40 border border-white/20 dark:border-slate-700/40 grid gap-proportional touch-spacing-y-lg">
+                <div class="metadata-grid place-items-center spacing-y-md">
+                    <span id="info-name" class="font-semibold fluid-text-lg text-slate-800 dark:text-white truncate w-full text-center prevent-text-overflow">Station Name</span>
+                    <span id="info-genre" class="fluid-text-sm text-slate-500 dark:text-slate-300 truncate w-full text-center prevent-text-overflow">Genre</span>
                 </div>
-                <div class="flex items-center gap-4 w-full justify-between">
-                    <button id="play-pause-btn" class="glass-btn p-3 rounded-full bg-white/40 dark:bg-slate-700/40 shadow-md border border-white/20 dark:border-slate-600/30 text-indigo-600 dark:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Play/Pause">
+                <div class="audio-player-grid touch-spacing-y desktop-only-controls">
+                    <button id="play-pause-btn" class="glass-btn rounded-full bg-white/40 dark:bg-slate-700/40 shadow-md border border-white/20 dark:border-slate-600/30 text-indigo-600 dark:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Play/Pause">
                         <i class="fas fa-play text-2xl" id="play-icon"></i>
                         <i class="fas fa-pause text-2xl hidden" id="pause-icon"></i>
                     </button>
-                    <div class="w-full flex items-center gap-3">
+                    <div class="volume-grid">
                         <i class="fas fa-volume-down text-slate-400"></i>
-                        <input type="range" id="volume-bar" min="0" max="100" value="70" class="glass-range w-full h-2 rounded-lg bg-pink-200 dark:bg-pink-900/40 appearance-none cursor-pointer">
+                        <input type="range" id="volume-bar" min="0" max="100" value="70" class="glass-range rounded-lg bg-pink-200 dark:bg-pink-900/40 appearance-none cursor-pointer">
                         <i class="fas fa-volume-up text-slate-400"></i>
                     </div>
-                    <button id="mute-btn" class="glass-btn p-3 rounded-full bg-white/40 dark:bg-slate-700/40 shadow-md border border-white/20 dark:border-slate-600/30 text-pink-600 dark:text-pink-300 hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Mute/Unmute">
+                    <button id="mute-btn" class="glass-btn rounded-full bg-white/40 dark:bg-slate-700/40 shadow-md border border-white/20 dark:border-slate-600/30 text-pink-600 dark:text-pink-300 hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Mute/Unmute">
                         <i class="fas fa-volume-up text-xl" id="volume-up-icon"></i>
                         <i class="fas fa-volume-mute text-xl hidden" id="volume-mute-icon"></i>
                     </button>
@@ -132,7 +172,7 @@
                 </div>-->
                 
             </div>
-            <div id="controls-container" class="mt-auto">
+            <div id="controls-container" class="grid-container mt-auto element-padding-proportional">
                 <h3 class="sr-only">Audio Player Controls</h3>
                 <audio id="audio-player" controls crossOrigin="anonymous" class="hidden" aria-label="Radio audio player - Use standard media controls to play, pause, or adjust volume" role="application" aria-describedby="audio-help">
                     Your browser does not support the audio element.
@@ -142,6 +182,42 @@
 
             <!-- End Custom Audio Player UI -->
         </main>
+        </div>
+    </div>
+
+    <!-- Mobile Search Overlay -->
+    <div id="mobile-search-overlay" class="fixed inset-0 bg-white/95 dark:bg-slate-900/95 z-30 hidden mobile-view-transition mobile-only">
+        <div class="p-4 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold fluid-text-lg">Search Stations</h3>
+                <button id="mobile-search-close" class="mobile-action-btn text-slate-600 dark:text-slate-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <input type="search" id="mobile-search-input" placeholder="Search stations..." class="w-full px-3 py-2 bg-white/50 dark:bg-slate-800/60 border border-slate-300/50 dark:border-slate-600/80 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-500 dark:placeholder-slate-400 touch-enhanced fluid-text-md mb-4">
+            <div id="mobile-search-results" class="flex-1 overflow-y-auto mobile-scroll"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Controls -->
+    <div class="bottom-controls" id="mobile-bottom-controls">
+        <button id="mobile-favorite-btn" class="favorite-action" aria-label="Add to Favorites">
+            <i class="far fa-heart"></i>
+        </button>
+        <button id="mobile-equalizer-btn" class="eq-action" aria-label="Equalizer">
+            <i class="fas fa-sliders-h"></i>
+        </button>
+        <button id="mobile-play-pause-btn" class="primary-action relative" aria-label="Play/Pause">
+            <i class="fas fa-play play-btn" id="mobile-play-icon"></i>
+            <i class="fas fa-pause pause-btn hidden" id="mobile-pause-icon"></i>
+        </button>
+        <button id="mobile-mute-btn" class="relative" aria-label="Mute/Unmute">
+            <i class="fas fa-volume-up unmute-btn" id="mobile-volume-up-icon"></i>
+            <i class="fas fa-volume-mute mute-btn hidden" id="mobile-volume-mute-icon"></i>
+        </button>
+        <button id="mobile-share-btn" class="share-action" aria-label="Share">
+            <i class="fas fa-share-alt"></i>
+        </button>
     </div>
 
     <!-- Main Application Script (ES6 Module) -->
